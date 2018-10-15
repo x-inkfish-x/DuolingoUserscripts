@@ -4,11 +4,8 @@
 // @version      0.1
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
-// @match        https://www.duolingo.com/*
+// @match        https://www.duolingo.com/
 // @run-at       document-start
-
-// @grant        GM_setValue
-// @grant        GM_getValue
 
 // @require http://code.jquery.com/jquery-3.3.1.min.js
 
@@ -16,13 +13,15 @@
 
 var courseDataSaveName = "duolingoCourseData";
 var skillStrengthFieldId = "skillStrength";
+var skills;
+
+// ---------------------------------------------------------------------------------------------------------
 
 function getSkillsObject( jsonString )
 {
-    var jsonStringObject = jsonString !== undefined ? jsonString : GM_getValue( courseDataSaveName );
-    if( jsonStringObject !== undefined )
+    if( jsonString !== undefined )
     {
-        var obj = JSON.parse( jsonStringObject );
+        var obj = JSON.parse( jsonString );
 
         if( obj !== undefined )
         {
@@ -38,6 +37,8 @@ function getSkillsObject( jsonString )
 
     return undefined;
 }
+
+// ---------------------------------------------------------------------------------------------------------
 
 function makeStrengthColour( strength )
 {
@@ -62,6 +63,8 @@ function makeStrengthColour( strength )
     return "#" + color;
 }
 
+// ---------------------------------------------------------------------------------------------------------
+
 function makeStrengthIndicator( strength )
 {
     var circles = "";
@@ -73,6 +76,8 @@ function makeStrengthIndicator( strength )
 
     return circles
 }
+
+// ---------------------------------------------------------------------------------------------------------
 
 function insertSkillStrength( skill, skillHtmlElement )
 {
@@ -90,45 +95,48 @@ function insertSkillStrength( skill, skillHtmlElement )
     }
 }
 
+// ---------------------------------------------------------------------------------------------------------
+
 function isMainPage()
 {
     return $( "div#root" ).length > 0;
 }
+
+// ---------------------------------------------------------------------------------------------------------
 
 function hasStrengthFields()
 {
     return $( "span#" + skillStrengthFieldId ).length > 0;
 }
 
-var timer;
+// ---------------------------------------------------------------------------------------------------------
 
 function insertSkillStrengths()
 {
-    // Get the skills for the course
-    var skills = getSkillsObject();
-
     // Check if the current page already contains the skill strength fields
-    if( isMainPage() && !hasStrengthFields() )
+    if( skills !== undefined && isMainPage() && !hasStrengthFields() )
     {
-        if( skills !== undefined )
-        {
-            var skillElements = $( "div._2albn" );
-            var skillIndex = 0;
-            skills.forEach( function( skillRow )
-                {
-                    skillRow.forEach( function( skill )
-                        {
-                            insertSkillStrength( skill, skillElements[skillIndex] );
-                            skillIndex++;
-                        }
-                    );
-                }
-            );
-        }
+        var skillElements = $( "div._2albn" );
+        var skillIndex = 0;
+        skills.forEach( function( skillRow )
+            {
+                skillRow.forEach( function( skill )
+                    {
+                        insertSkillStrength( skill, skillElements[skillIndex] );
+                        skillIndex++;
+                    }
+                );
+            }
+        );
     }
 }
 
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
 // Setup to catch incoming Http request responses
+
 var rawOpen = XMLHttpRequest.prototype.open;
 
 XMLHttpRequest.prototype.open = function()
@@ -141,6 +149,8 @@ XMLHttpRequest.prototype.open = function()
     rawOpen.apply( this, arguments );
 }
 
+// ---------------------------------------------------------------------------------------------------------
+
 function setupHook(xhr)
 {
     function getter()
@@ -148,10 +158,12 @@ function setupHook(xhr)
         delete xhr.responseText;
         var ret = xhr.responseText;
 
+        var s = getSkillsObject( ret );
+
         // If the response contains the course skills
-        if( getSkillsObject( ret ) !== undefined )
+        if( s !== undefined )
         {
-            GM_setValue( courseDataSaveName, ret );
+            skills = s;
             insertSkillStrengths();
         }
 
@@ -169,15 +181,22 @@ function setupHook(xhr)
     setup();
 }
 
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
+// Listen for changes on page
+
 var target = document.querySelector( "html" );
 
 var observer = new MutationObserver( function( mutations ) {
-    mutations.forEach( function( mutation ) {
-        console.log( mutation );
-    } );
     insertSkillStrengths();
 } );
 
 var config = { attributes: true, childList: true, characterData: true }
 
 observer.observe( target, config );
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
