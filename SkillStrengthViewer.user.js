@@ -90,6 +90,16 @@ function insertSkillStrength( skill, skillHtmlElement )
     }
 }
 
+function isMainPage()
+{
+    return $( "div#root" ).length > 0;
+}
+
+function hasStrengthFields()
+{
+    return $( "span#" + skillStrengthFieldId ).length > 0;
+}
+
 var timer;
 
 function insertSkillStrengths()
@@ -98,7 +108,7 @@ function insertSkillStrengths()
     var skills = getSkillsObject();
 
     // Check if the current page already contains the skill strength fields
-    if( $( "span#" + skillStrengthFieldId ).length === 0 )
+    if( isMainPage() && !hasStrengthFields() )
     {
         if( skills !== undefined )
         {
@@ -158,3 +168,16 @@ function setupHook(xhr)
     }
     setup();
 }
+
+var target = document.querySelector( "html" );
+
+var observer = new MutationObserver( function( mutations ) {
+    mutations.forEach( function( mutation ) {
+        console.log( mutation );
+    } );
+    insertSkillStrengths();
+} );
+
+var config = { attributes: true, childList: true, characterData: true }
+
+observer.observe( target, config );
