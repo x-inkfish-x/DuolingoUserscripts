@@ -1,4 +1,4 @@
-var DuolingoDataUtilities = {};
+DuolingoDataUtilities = {};
 
 DuolingoDataUtilities.parseCourseData = function (jsonString) {
     var jsonStringObject = jsonString !== undefined ? jsonString : GM_getValue(courseDataSaveName);
