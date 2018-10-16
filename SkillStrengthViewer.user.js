@@ -182,7 +182,7 @@ function setupHook(xhr)
 
 // Listen for changes on page
 
-var target = document.querySelector( "html" );
+var target = document.querySelector( "body" );
 
 var observer = new MutationObserver( function( mutations ) {
     insertSkillStrengths();
