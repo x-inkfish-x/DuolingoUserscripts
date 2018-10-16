@@ -1,3 +1,4 @@
+import jquery from "http://code.jquery.com/jquery-3.3.1.min.js"
 
 var DuolingoDataObj = {};
 DuolingoDataObj.skillStrengthFieldId = "skillStrength";
