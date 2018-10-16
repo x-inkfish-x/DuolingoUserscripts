@@ -50,7 +50,10 @@ function setupHook(xhr)
         if( c !== undefined )
         {
             DuolingoDataObj.course = c;
-            insertSkillStrengths();
+            if( DuolingoDataObj.onGetCourse )
+            {
+                DuolingoDataObj.onGetCourse( DuolingoDataObj.course );
+            }
         }
 
         setup();
@@ -76,7 +79,10 @@ function setupHook(xhr)
 var target = document.querySelector( "body" );
 
 var observer = new MutationObserver( function( mutations ) {
-    insertSkillStrengths();
+    if( DuolingoDataObj.onPageUpdate )
+    {
+        DuolingoDataObj.onPageUpdate( mutations );
+    }
 } );
 
 var config = { attributes: true, childList: true, characterData: true }
