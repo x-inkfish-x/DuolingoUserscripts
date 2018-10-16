@@ -1,14 +1,17 @@
 // ==UserScript==
-// @name         Strength Viewer
+// @name         Strength Viewer Experimental
 // @namespace    https://github.com/x-inkfish-x/
-// @version      0.1
+// @version      0.1.0
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
 // @run-at       document-start
 
-// @require http://code.jquery.com/jquery-3.3.1.min.js
-// @require 
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Experimental/SkillStrengthViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Experimental/SkillStrengthViewer.user.js
+
+// @require      http://code.jquery.com/jquery-3.3.1.min.js
+// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/Experimental/DataUtilities.js
 
 // ==/UserScript==
 
