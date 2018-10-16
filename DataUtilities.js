@@ -1,27 +1,65 @@
 // Injecting jquery
-if( !document.getElementById( "jquery-include" ) )
-{
-    var script = document.createElement( "script" );
-    script.setAttribute( "id", "jquery-include" );
-    script.setAttribute( "src", "http://code.jquery.com/jquery-3.3.1.min.js");
-    script.setAttribute( "type", "text/javascript" );
-
-    document.getElementsByTagName( "head")[0].appendChild( script );
+if (!document.getElementById("jquery-include")) {
+    var script = document.createElement("script");
+    script.setAttribute("id", "jquery-include");
+    script.setAttribute("src", "https://code.jquery.com/jquery-3.3.1.min.js");
+    script.setAttribute("type", "text/javascript");
+    script.async = false;
+    document.getElementsByTagName("head")[0].appendChild(script);
 }
 
-var DuolingoDataObj = {};
-DuolingoDataObj.skillStrengthFieldId = "skillStrength";
+var DuolingoHelper = {};
+DuolingoHelper.skillStrengthFieldId = "skillStrength";
 
 // ---------------------------------------------------------------------------------------------------------
 
-function getSkillsObject( jsonString )
-{
-    if( jsonString !== undefined )
-    {
-        var obj = JSON.parse( jsonString );
+DuolingoHelper.isMainPage = function () {
+    return window.location.href = "https://www.duolingo.com";
+}
 
-        if( obj !== undefined )
-        {
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.hasStrengthFields = function () {
+    return $("span#" + DuolingoHelper.skillStrengthFieldId).length > 0;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.requestVocabulary = function (success, failure) {
+    $.ajax({
+        url: "/vocabulary/overview",
+        success: function (result) {
+            success(JSON.parse(result));
+        },
+        error: failure
+    });
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.requestDictionaryDefinition = function (lexemeId, success, failure) {
+    $.ajax({
+        url: "/api/1/dictionary_page?lexeme_id=" + lexemeId,
+        success: function (result) {
+            success(JSON.parse(result));
+        },
+        error: failure
+    });
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.getSkillFields = function(){
+    return $("a.Af4up");
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function makeCourseObject(jsonString) {
+    if (jsonString !== undefined) {
+        var obj = JSON.parse(jsonString);
+
+        if (obj !== undefined) {
             return obj.currentCourse;
         }
     }
@@ -29,38 +67,36 @@ function getSkillsObject( jsonString )
     return undefined;
 }
 
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
 // Setup to catch incoming Http request responses
 
 var rawOpen = XMLHttpRequest.prototype.open;
 
-XMLHttpRequest.prototype.open = function()
-{
-    if ( !this._hooked )
-    {
+XMLHttpRequest.prototype.open = function () {
+    if (!this._hooked) {
         this._hooked = true;
-        setupHook( this );
+        setupHook(this);
     }
-    rawOpen.apply( this, arguments );
+    rawOpen.apply(this, arguments);
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
-function setupHook(xhr)
-{
-    function getter()
-    {
+function setupHook(xhr) {
+    function getter() {
         delete xhr.responseText;
         var ret = xhr.responseText;
 
-        var c = getSkillsObject( ret );
+        var course = makeCourseObject(ret);
 
-        // If the response contains the course skills
-        if( c !== undefined )
-        {
-            DuolingoDataObj.course = c;
-            if( DuolingoDataObj.onGetCourse )
-            {
-                DuolingoDataObj.onGetCourse( DuolingoDataObj.course );
+        // If the response contains the course
+        if (course !== undefined) {
+            DuolingoHelper.course = course;
+            if (DuolingoHelper.onGetCourse) {
+                DuolingoHelper.onGetCourse(DuolingoHelper.course);
             }
         }
 
@@ -68,12 +104,11 @@ function setupHook(xhr)
         return ret;
     }
 
-    function setup()
-    {
-        Object.defineProperty( xhr, 'responseText', {
+    function setup() {
+        Object.defineProperty(xhr, 'responseText', {
             get: getter,
             configurable: true
-        } );
+        });
     }
     setup();
 }
@@ -84,18 +119,21 @@ function setupHook(xhr)
 
 // Listen for changes on page
 
-var target = document.querySelector( "body" );
+var target = document.querySelector("body");
 
-var observer = new MutationObserver( function( mutations ) {
-    if( DuolingoDataObj.onPageUpdate )
-    {
-        DuolingoDataObj.onPageUpdate( mutations );
+var observer = new MutationObserver(function (mutations) {
+    if (DuolingoHelper.onPageUpdate) {
+        DuolingoHelper.onPageUpdate(mutations);
     }
-} );
+});
 
-var config = { attributes: true, childList: true, characterData: true }
+var config = {
+    attributes: true,
+    childList: true,
+    characterData: true
+}
 
-observer.observe( target, config );
+observer.observe(target, config);
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------

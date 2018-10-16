@@ -16,24 +16,16 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
-function makeStrengthColour( strength )
-{
+function makeStrengthColour(strength) {
     var color = "000000";
-    if( strength <= 0.25 )
-    {
-       color = "d1102a";
-    }
-    else if( strength <= 0.5 )
-    {
-       color = "ed850e";
-    }
-    else if( strength <= 0.75 )
-    {
-       color = "f4e21d";
-    }
-    else if( strength <= 1 )
-    {
-       color = "33c40b";
+    if (strength <= 0.25) {
+        color = "d1102a";
+    } else if (strength <= 0.5) {
+        color = "ed850e";
+    } else if (strength <= 0.75) {
+        color = "f4e21d";
+    } else if (strength <= 1) {
+        color = "33c40b";
     }
 
     return "#" + color;
@@ -41,12 +33,10 @@ function makeStrengthColour( strength )
 
 // ---------------------------------------------------------------------------------------------------------
 
-function makeStrengthIndicator( strength )
-{
+function makeStrengthIndicator(strength) {
     var circles = "";
 
-    for( var i = 0; i < strength; i += 0.25 )
-    {
+    for (var i = 0; i < strength; i += 0.25) {
         circles += '\u25C9';
     }
 
@@ -55,63 +45,39 @@ function makeStrengthIndicator( strength )
 
 // ---------------------------------------------------------------------------------------------------------
 
-function insertSkillStrength( skill, skillHtmlElement )
-{
-    if( skillHtmlElement !== undefined && skill.accessible === true && skill.strength !== undefined )
-    {
-        var strengthSpan = $(skillHtmlElement).find( "span#" + DuolingoDataObj.skillStrengthFieldId );
-        var strengthIndicator = makeStrengthIndicator( skill.strength );
-        var strengthColor = "color:" + makeStrengthColour( skill.strength );
+function insertSkillStrength(skill, skillHtmlElement) {
+    if (skillHtmlElement && skill.accessible === true && skill.strength) {
+        var strengthSpan = $(skillHtmlElement).find("span#" + DuolingoHelper.skillStrengthFieldId);
+        var strengthIndicator = makeStrengthIndicator(skill.strength);
+        var strengthColor = "color:" + makeStrengthColour(skill.strength);
 
-        if( strengthSpan.length === 0 )
-        {
-            var strengthHtml = '<span class="_3qO9M _33VdW" id="' + DuolingoDataObj.skillStrengthFieldId + '" style="' + strengthColor + '">' + strengthIndicator + '</span>';
-            $( skillHtmlElement ).append( strengthHtml );
+        if (strengthSpan.length === 0) {
+            var strengthHtml = '<span class="_3qO9M _33VdW" id="' + DuolingoHelper.skillStrengthFieldId + '" style="' + strengthColor + '">' + strengthIndicator + '</span>';
+            $(skillHtmlElement).append(strengthHtml);
         }
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
-function isMainPage()
-{
-    return $( "div#root" ).length > 0;
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
-function hasStrengthFields()
-{
-    return $( "span#" + DuolingoDataObj.skillStrengthFieldId ).length > 0;
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
-function insertSkillStrengths()
-{
-    var course = DuolingoDataObj.course;
+function insertSkillStrengths() {
+    var course = DuolingoHelper.course;
     // Check if the current page already contains the skill strength fields
-    if( course 
-        && isMainPage() 
-        && !hasStrengthFields() )
-    {
-        var skillElements = $( "div._2albn" );
+    if (course &&
+        !DuolingoHelper.hasStrengthFields()) {
+        var skillElements = DuolingoHelper.getSkillFields();
         var skillIndex = 0;
-        course.skills.forEach( function( skillRow )
-            {
-                skillRow.forEach( function( skill )
-                    {
-                        insertSkillStrength( skill, skillElements[skillIndex] );
-                        skillIndex++;
-                    }
-                );
-            }
-        );
+        course.skills.forEach(function (skillRow) {
+            skillRow.forEach(function (skill) {
+                insertSkillStrength(skill, skillElements[skillIndex]);
+                skillIndex++;
+            });
+        });
     }
 }
 
-DuolingoDataObj.onGetCourse = insertSkillStrength;
-DuolingoDataObj.onPageUpdate = insertSkillStrengths;
+DuolingoHelper.onGetCourse = insertSkillStrength;
+DuolingoHelper.onPageUpdate = insertSkillStrengths;
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
