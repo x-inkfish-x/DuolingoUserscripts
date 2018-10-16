@@ -1,53 +1,88 @@
-export DuolingoDataUtilities = {};
 
-DuolingoDataUtilities.parseCourseData = function (jsonString) {
-    var jsonStringObject = jsonString !== undefined ? jsonString : GM_getValue(courseDataSaveName);
-    if (jsonStringObject !== undefined) {
-        var obj = JSON.parse(jsonStringObject);
+var DuolingoDataObj = {};
+DuolingoDataObj.skillStrengthFieldId = "skillStrength";
 
-        if (obj !== undefined) {
+// ---------------------------------------------------------------------------------------------------------
+
+function getSkillsObject( jsonString )
+{
+    if( jsonString !== undefined )
+    {
+        var obj = JSON.parse( jsonString );
+
+        if( obj !== undefined )
+        {
             return obj.currentCourse;
         }
     }
 
+
     return undefined;
 }
 
-DuolingDataUtilities.setupHook = function (xhr) {
-    function getter() {
+
+// Setup to catch incoming Http request responses
+
+var rawOpen = XMLHttpRequest.prototype.open;
+
+XMLHttpRequest.prototype.open = function()
+{
+    if ( !this._hooked )
+    {
+        this._hooked = true;
+        setupHook( this );
+    }
+    rawOpen.apply( this, arguments );
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function setupHook(xhr)
+{
+    function getter()
+    {
         delete xhr.responseText;
         var ret = xhr.responseText;
 
-        var courseData = parseCourseData(ret);
-        // If the response contains the course skills
-        if ( courseData !== undefined) {
-            this.courseData = courseData;
+        var c = getSkillsObject( ret );
 
-            if (this.retrievedDataCallback) {
-                retrievedDataCallback( this );
-            }
+        // If the response contains the course skills
+        if( c !== undefined )
+        {
+            DuolingoDataObj.course = c;
+            insertSkillStrengths();
         }
 
         setup();
         return ret;
     }
 
-    function setup() {
-        Object.defineProperty(xhr, 'responseText', {
+    function setup()
+    {
+        Object.defineProperty( xhr, 'responseText', {
             get: getter,
             configurable: true
-        });
+        } );
     }
     setup();
 }
 
-// Setup to catch incoming Http request responses
-var rawOpen = XMLHttpRequest.prototype.open;
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
 
-XMLHttpRequest.prototype.open = function () {
-    if (!this._hooked) {
-        this._hooked = true;
-        DuolingoDataUtilities.setupHook(this);
-    }
-    rawOpen.apply(this, arguments);
-}
+// Listen for changes on page
+
+var target = document.querySelector( "body" );
+
+var observer = new MutationObserver( function( mutations ) {
+    insertSkillStrengths();
+} );
+
+var config = { attributes: true, childList: true, characterData: true }
+
+observer.observe( target, config );
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
