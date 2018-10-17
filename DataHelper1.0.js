@@ -132,7 +132,7 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
                 });
             });
         } else {
-            this.requestCourse(this.makeSkillStrengthDecorator);
+            this.requestCourse(this.makeSkillStrengthDecorator, function(){});
         }
     }
 }
