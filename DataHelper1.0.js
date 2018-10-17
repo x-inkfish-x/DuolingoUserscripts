@@ -12,7 +12,7 @@ DuolingoHelper.hostName = "https://www.duolingo.com";
 
 DuolingoHelper.requestCourse = function (success, error, userId = undefined) {
     if (userId) {
-        var requestUrl = this.hostName + "/2017-06-30/users/" + userId + "?fields=currentCourse";
+        var requestUrl = hostName + "/2017-06-30/users/" + userId + "?fields=currentCourse";
         var succesFunc = function (response) {
             if (response) {
                 var obj = JSON.parse(response);
@@ -27,16 +27,16 @@ DuolingoHelper.requestCourse = function (success, error, userId = undefined) {
             }
         }
 
-        this.makeGetRequest(requestUrl, succesFunc, error);
-    } else if (this.userId) {
-        this.requestCourse(success, error, this.userId);
+        makeGetRequest(requestUrl, succesFunc, error);
+    } else if (userId) {
+        requestCourse(success, error, userId);
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.requestVocabulary = function (success, error) {
-    this.makeGetRequest(this.hostName + "/vocabulary/overview", function (response) {
+    makeGetRequest(hostName + "/vocabulary/overview", function (response) {
         if (response) {
             success(JSON.parse(response));
         } else {
@@ -48,7 +48,7 @@ DuolingoHelper.requestVocabulary = function (success, error) {
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.requestDictionaryDefinition = function (lexemeId, success, error) {
-    this.makeGetRequest(this.hostName + "/api/1/dictionary_page?lexeme_id=" + lexemeId, function (response) {
+    makeGetRequest(hostName + "/api/1/dictionary_page?lexeme_id=" + lexemeId, function (response) {
         if (response) {
             success(JSON.parse(response));
         } else {
@@ -85,7 +85,7 @@ DuolingoHelper.isMainPage = function () {
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.hasStrengthFields = function () {
-    return !(!document.getElementById(this.skillStrengthFieldId));
+    return !(!document.getElementById(skillStrengthFieldId));
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -102,10 +102,10 @@ DuolingoHelper.getSkillFields = function () {
 
 // Stump function, to be implemented
 DuolingoHelper.markSkillFieldsWithId = function () {
-    var fields = this.getSkillFields();
+    var fields = getSkillFields();
     var skillIndex = 0;
 
-    this.course.skills.forEach(function (skillRow) {
+    course.skills.forEach(function (skillRow) {
         skillRow.forEach(function (skill) {
             var id = skill.id;
 
@@ -121,7 +121,7 @@ DuolingoHelper.markSkillFieldsWithId = function () {
 // Decorator functions
 
 DuolingoHelper.makeSkillStrengthDecorator = function (course) {
-    if (this.skillStrengthDecorator) {
+    if (skillStrengthDecorator) {
         if (course) {
             var skillElements = DuolingoHelper.getSkillFields();
             var skillIndex = 0;
@@ -132,7 +132,7 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
                 });
             });
         } else {
-            this.requestCourse(this.makeSkillStrengthDecorator, function(){});
+            requestCourse(makeSkillStrengthDecorator, function(){});
         }
     }
 }
@@ -146,8 +146,8 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
 var rawOpen = XMLHttpRequest.prototype.open;
 
 XMLHttpRequest.prototype.open = function () {
-    if (!this._hooked) {
-        this._hooked = true;
+    if (!_hooked) {
+        _hooked = true;
         setupHook(this);
     }
     rawOpen.apply(this, arguments);
