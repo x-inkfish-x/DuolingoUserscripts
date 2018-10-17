@@ -74,8 +74,8 @@ function setupHook(xhr) {
 
         var obj = JSON.parse(ret);
 
-        if (obj && obj.userId) {
-            DuolingoDataObj.userId = userId;
+        if (obj && obj.currentCourse && obj.id) {
+            DuolingoDataObj.userId = obj.id;
             if (DuolingoDataObj.onCaughtUserId) {
                 DuolingoDataObj.onCaughtUserId(DuolingoDataObj.userId);
             }
