@@ -118,6 +118,29 @@ DuolingoHelper.markSkillFieldsWithId = function () {
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 
+// Decorator functions
+
+DuolingoHelper.makeSkillStrengthDecorator = function (course) {
+    if (course) {
+        if (this.skillStrengthDecorator) {
+            var skillElements = DuolingoHelper.getSkillFields();
+            var skillIndex = 0;
+            course.skills.forEach(function (skillRow) {
+                skillRow.forEach(function (skill) {
+                    DuolingoHelper.skillStrengthDecorator(skill, skillElements[skillIndex]);
+                    skillIndex++;
+                });
+            });
+        }
+    } else {
+        this.requestCourse( this.makeSkillStrengthDecorator );
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
 // Setup to catch incoming Http request responses
 
 var rawOpen = XMLHttpRequest.prototype.open;

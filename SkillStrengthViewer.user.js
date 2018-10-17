@@ -61,29 +61,20 @@ function insertSkillStrength(skill, skillHtmlElement) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-function insertSkillStrengths(course) {
-    // Check if the current page already contains the skill strength fields
-    if (course &&
-        DuolingoHelper.isMainPage() &&
+DuolingoHelper.onCaughtUserId = function () {
+    if ( DuolingoHelper.isMainPage() &&
         !DuolingoHelper.hasStrengthFields()) {
-        var skillElements = DuolingoHelper.getSkillFields();
-        var skillIndex = 0;
-        course.skills.forEach(function (skillRow) {
-            skillRow.forEach(function (skill) {
-                insertSkillStrength(skill, skillElements[skillIndex]);
-                skillIndex++;
-            });
-        });
+            DuolingoHelper.makeSkillStrengthDecorator();
     }
 }
 
-DuolingoHelper.onCaughtUserId = function () {
-    DuolingoHelper.requestCourse(insertSkillStrengths);
-}
+// ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.onPageUpdate = function () {
-    DuolingoHelper.requestCourse(insertSkillStrengths);
-}
+DuolingoHelper.onPageUpdate = DuolingoHelper.onCaughtUserId;
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.skillStrengthDecorator = insertSkillStrength;
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
