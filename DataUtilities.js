@@ -49,17 +49,32 @@ DuolingoHelper.requestDictionaryDefinition = function (lexemeId, success, failur
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.getSkillFields = function(){
+DuolingoHelper.getSkillFields = function () {
     return $("a.Af4up");
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
+DuolingoHelper.markSkillFieldsWithId = function () {
+    var fields = this.getSkillFields();
+    var skillIndex = 0;
+
+    this.course.skills.forEach(function (skillRow) {
+        skillRow.forEach(function (skill) {
+            var id = skill.id;
+            
+            skillIndex++;
+        });
+    });
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 function makeCourseObject(jsonString) {
-    if (jsonString !== undefined) {
+    if (jsonString) {
         var obj = JSON.parse(jsonString);
 
-        if (obj !== undefined) {
+        if (obj) {
             return obj.currentCourse;
         }
     }

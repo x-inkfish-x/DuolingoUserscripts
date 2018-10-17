@@ -48,10 +48,10 @@ function makeStrengthIndicator(strength) {
 function insertSkillStrength(skill, skillHtmlElement) {
     if (skillHtmlElement && skill.accessible === true && skill.strength) {
         var strengthSpan = $(skillHtmlElement).find("span#" + DuolingoHelper.skillStrengthFieldId);
-        var strengthIndicator = makeStrengthIndicator(skill.strength);
-        var strengthColor = "color:" + makeStrengthColour(skill.strength);
-
+        
         if (strengthSpan.length === 0) {
+            var strengthIndicator = makeStrengthIndicator(skill.strength);
+            var strengthColor = "color:" + makeStrengthColour(skill.strength);
             var strengthHtml = '<span class="_3qO9M _33VdW" id="' + DuolingoHelper.skillStrengthFieldId + '" style="' + strengthColor + '">' + strengthIndicator + '</span>';
             $(skillHtmlElement).append(strengthHtml);
         }
