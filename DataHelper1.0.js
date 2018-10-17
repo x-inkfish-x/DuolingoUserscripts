@@ -8,7 +8,7 @@ DuolingoHelper.skillStrengthFieldId = "skillStrength";
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.isMainPage = function () {
-    return window.location.href == "https://www.duolingo.com/";
+    return window.location.pathname.replace("/", "").length == 0;
 }
 
 // ---------------------------------------------------------------------------------------------------------
