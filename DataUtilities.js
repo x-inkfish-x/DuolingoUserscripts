@@ -25,8 +25,8 @@ DuolingoDataObj.requestCourse = function (success, error, userId = undefined ) {
         var requestUrl = "https://www.duolingo.com/2017-06-30/users/" + userId + "?fields=currentCourse";
 
         var succesFunc = function (response) {
-            if(response.responseText){
-                var obj = JSON.parse(response.responseText);
+            if(response){
+                var obj = JSON.parse(response);
 
                 if (obj) {
                     success(obj.currentCourse);
@@ -48,7 +48,10 @@ function makeGetRequest(url, success, error)
     var xhttp = new XMLHttpRequest();
     xhttp.onerror = error;
     xhttp.onreadystatechange = function(){
-        success(xhttp);
+        delete xhttp.responseText;
+        var ret = xhttp.responseText;
+        success(ret);
+        return ret;
     }
     xhttp.open("GET", url);
     xhttp.send();
