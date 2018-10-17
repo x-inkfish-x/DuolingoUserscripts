@@ -35,7 +35,7 @@ DuolingoDataObj.requestCourse = function (success, error, userId = undefined ) {
         }
 
         makeGetRequest(requestUrl, succesFunc, error);
-    } else {
+    } else if(DuolingoDataObj.userId) {
         this.requestCourse(success, error, DuolingoDataObj.userId);
     }
 }
