@@ -64,8 +64,8 @@ function insertSkillStrength(skill, skillHtmlElement) {
 function insertSkillStrengths(course) {
     // Check if the current page already contains the skill strength fields
     if (course &&
-        isMainPage() &&
-        !hasStrengthFields()) {
+        DuolingoHelper.isMainPage() &&
+        !DuolingoHelper.hasStrengthFields()) {
         var skillElements = $("div._2albn");
         var skillIndex = 0;
         course.skills.forEach(function (skillRow) {
