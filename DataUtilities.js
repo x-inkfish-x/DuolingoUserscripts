@@ -25,7 +25,7 @@ DuolingoDataObj.requestCourse = function (success, error, userId = undefined ) {
         var requestUrl = "/2017-06-30/users/" + userId + "?fields=currentCourse";
 
         var succesFunc = function (response) {
-            var obj = JSON.parse(response);
+            var obj = JSON.parse(response.responseText);
 
             if (obj) {
                 success(obj.currentCourse);
