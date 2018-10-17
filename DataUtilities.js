@@ -73,7 +73,6 @@ function setupHook(xhr) {
         var ret = xhr.responseText;
 
         var obj = JSON.parse(ret);
-        var userId = getSkillsObject(ret);
 
         if (obj && obj.userId) {
             DuolingoDataObj.userId = userId;
