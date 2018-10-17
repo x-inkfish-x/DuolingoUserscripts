@@ -22,7 +22,7 @@ DuolingoDataObj.skillStrengthFieldId = "skillStrength";
 
 DuolingoDataObj.requestCourse = function (success, error, userId = undefined ) {
     if (userId) {
-        var requestUrl = "/2017-06-30/users/" + userId + "?fields=currentCourse";
+        var requestUrl = "https://www.duolingo.com/2017-06-30/users/" + userId + "?fields=currentCourse";
 
         var succesFunc = function (response) {
             var obj = JSON.parse(response.responseText);
