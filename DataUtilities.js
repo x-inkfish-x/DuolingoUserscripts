@@ -1,4 +1,4 @@
-// Injecting jquery
+// Adding jquery
 
 if (!document.getElementById("jquery-include")) {
     var script = document.createElement("script");
@@ -40,6 +40,15 @@ DuolingoDataObj.requestCourse = function (success, error, userId) {
     } else {
         this.requestCourse(DuolingoDataObj.userId, success, error);
     }
+}
+
+function makeGetRequest(url, success, error)
+{
+    var xhttp = new XMLHttpRequest();
+    xhttp.onerror = error;
+    xhttp.onreadystatechange = success;
+    xhttp.open("GET", url);
+    xhttp.send();
 }
 
 // ---------------------------------------------------------------------------------------------------------
