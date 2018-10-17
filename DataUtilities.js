@@ -20,25 +20,23 @@ DuolingoDataObj.skillStrengthFieldId = "skillStrength";
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoDataObj.requestCourse = function (success, error, userId) {
+DuolingoDataObj.requestCourse = function (success, error, userId = undefined ) {
     if (userId) {
         var requestUrl = "/2017-06-30/users/" + userId + "?fields=currentCourse";
 
-        $.ajax({
-            url: requestUrl,
-            success: function (response) {
-                var obj = JSON.parse(response);
+        var succesFunc = function (response) {
+            var obj = JSON.parse(response);
 
-                if (obj) {
-                    success(obj.currentCourse);
-                } else {
-                    error();
-                }
-            },
-            error: error
-        });
+            if (obj) {
+                success(obj.currentCourse);
+            } else {
+                error();
+            }
+        }
+
+        makeGetRequest(requestUrl, succesFunc, error);
     } else {
-        this.requestCourse(DuolingoDataObj.userId, success, error);
+        this.requestCourse(success, error, DuolingoDataObj.userId);
     }
 }
 
