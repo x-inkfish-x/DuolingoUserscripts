@@ -76,16 +76,18 @@ function setupHook(xhr) {
     function getter() {
         delete xhr.responseText;
         var ret = xhr.responseText;
+        
+        if(ret.length > 0){
+           var obj = JSON.parse(ret);
 
-        var obj = JSON.parse(ret);
-
-        if (obj && obj.currentCourse && obj.id) {
-            DuolingoDataObj.userId = obj.id;
-            if (DuolingoDataObj.onCaughtUserId) {
-                DuolingoDataObj.onCaughtUserId(DuolingoDataObj.userId);
-            }
+            if (obj && obj.currentCourse && obj.id) {
+                DuolingoDataObj.userId = obj.id;
+                if (DuolingoDataObj.onCaughtUserId) {
+                    DuolingoDataObj.onCaughtUserId(DuolingoDataObj.userId);
+                }
+            } 
         }
-
+        
         setup();
         return ret;
     }
