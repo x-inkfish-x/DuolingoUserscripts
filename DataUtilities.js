@@ -5,7 +5,7 @@ if (!document.getElementById("jquery-include")) {
     script.setAttribute("id", "jquery-include");
     script.setAttribute("src", "https://code.jquery.com/jquery-3.3.1.min.js");
     script.setAttribute("type", "text/javascript");
-
+    script.async = false;
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 
