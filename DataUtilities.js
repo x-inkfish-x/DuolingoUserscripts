@@ -2,6 +2,8 @@
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 
+// Data get helpers
+
 var DuolingoHelper = {};
 DuolingoHelper.skillStrengthFieldId = "skillStrength";
 
@@ -42,6 +44,22 @@ DuolingoHelper.requestCourse = function (success, error, userId = undefined) {
 
 // ---------------------------------------------------------------------------------------------------------
 
+DuolingoHelper.requestVocabulary = function (success, error) {
+    makeGetRequest("/vocabulary/overview", function (result) {
+        success(JSON.parse(result));
+    }, error);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.requestDictionaryDefinition = function (lexemeId, success, error) {
+    makeGetRequest("/api/1/dictionary_page?lexeme_id=" + lexemeId, function (result) {
+        success(JSON.parse(result));
+    }, error);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 function makeGetRequest(url, success, error) {
     var xhttp = new XMLHttpRequest();
     xhttp.onerror = error;
@@ -53,6 +71,32 @@ function makeGetRequest(url, success, error) {
     }
     xhttp.open("GET", url);
     xhttp.send();
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
+// Page markup helpers
+
+DuolingoHelper.getSkillFields = function () {
+    return document.getElementsByClassName("Af4up");
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+// Stump function, to be implemented
+DuolingoHelper.markSkillFieldsWithId = function () {
+    var fields = this.getSkillFields();
+    var skillIndex = 0;
+
+    this.course.skills.forEach(function (skillRow) {
+        skillRow.forEach(function (skill) {
+            var id = skill.id;
+            
+            skillIndex++;
+        });
+    });
 }
 
 // ---------------------------------------------------------------------------------------------------------

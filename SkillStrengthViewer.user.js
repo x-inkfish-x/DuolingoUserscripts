@@ -66,7 +66,7 @@ function insertSkillStrengths(course) {
     if (course &&
         DuolingoHelper.isMainPage() &&
         !DuolingoHelper.hasStrengthFields()) {
-        var skillElements = $("div._2albn");
+        var skillElements = DuolingoHelper.getSkillFields();
         var skillIndex = 0;
         course.skills.forEach(function (skillRow) {
             skillRow.forEach(function (skill) {
