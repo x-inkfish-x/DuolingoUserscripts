@@ -14,7 +14,7 @@ DuolingoHelper.isMainPage = function () {
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.hasStrengthFields = function () {
-    return !document.getElementById(this.skillStrengthFieldId);
+    return !(!document.getElementById(this.skillStrengthFieldId));
 }
 
 // ---------------------------------------------------------------------------------------------------------
