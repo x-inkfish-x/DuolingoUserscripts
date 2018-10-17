@@ -6,24 +6,13 @@
 
 var DuolingoHelper = {};
 DuolingoHelper.skillStrengthFieldId = "skillStrength";
-
-// ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.isMainPage = function () {
-    return window.location.pathname.replace("/", "").length == 0;
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.hasStrengthFields = function () {
-    return !(!document.getElementById(this.skillStrengthFieldId));
-}
+DuolingoHelper.HostName = "https://www.duolingo.com";
 
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.requestCourse = function (success, error, userId = undefined) {
     if (userId) {
-        var requestUrl = "https://www.duolingo.com/2017-06-30/users/" + userId + "?fields=currentCourse";
+        var requestUrl = this.HostName + "/2017-06-30/users/" + userId + "?fields=currentCourse";
         var succesFunc = function (response) {
             if (response) {
                 var obj = JSON.parse(response);
@@ -33,6 +22,8 @@ DuolingoHelper.requestCourse = function (success, error, userId = undefined) {
                 } else {
                     error();
                 }
+            } else {
+                error();
             }
         }
 
@@ -45,16 +36,24 @@ DuolingoHelper.requestCourse = function (success, error, userId = undefined) {
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.requestVocabulary = function (success, error) {
-    makeGetRequest("/vocabulary/overview", function (result) {
-        success(JSON.parse(result));
+    makeGetRequest(this.HostName + "/vocabulary/overview", function (response) {
+        if (response) {
+            success(JSON.parse(response));
+        } else {
+            error();
+        }
     }, error);
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.requestDictionaryDefinition = function (lexemeId, success, error) {
-    makeGetRequest("/api/1/dictionary_page?lexeme_id=" + lexemeId, function (result) {
-        success(JSON.parse(result));
+    makeGetRequest(this.HostName + "/api/1/dictionary_page?lexeme_id=" + lexemeId, function (response) {
+        if (response) {
+            success(JSON.parse(response));
+        } else {
+            error();
+        }
     }, error);
 }
 
@@ -77,6 +76,22 @@ function makeGetRequest(url, success, error) {
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 
+// Page state query functions
+
+DuolingoHelper.isMainPage = function () {
+    return window.location.pathname.replace("/", "").length == 0;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.hasStrengthFields = function () {
+    return !(!document.getElementById(this.skillStrengthFieldId));
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
 // Page markup helpers
 
 DuolingoHelper.getSkillFields = function () {
@@ -93,7 +108,7 @@ DuolingoHelper.markSkillFieldsWithId = function () {
     this.course.skills.forEach(function (skillRow) {
         skillRow.forEach(function (skill) {
             var id = skill.id;
-            
+
             skillIndex++;
         });
     });
