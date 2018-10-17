@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Strength Viewer Experimental
 // @namespace    https://github.com/x-inkfish-x/
-// @version      0.1.3
+// @version      0.1.10
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
@@ -10,6 +10,7 @@
 // @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Experimental/SkillStrengthViewer.user.js
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Experimental/SkillStrengthViewer.user.js
 
+// @require      https://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/Experimental/DataUtilities.js
 
 // ==/UserScript==
@@ -46,13 +47,13 @@ function makeStrengthIndicator(strength) {
 // ---------------------------------------------------------------------------------------------------------
 
 function insertSkillStrength(skill, skillHtmlElement) {
-    if (skillHtmlElement && skill.accessible === true && skill.strength) {
-        var strengthSpan = $(skillHtmlElement).find("span#" + DuolingoHelper.skillStrengthFieldId);
-        
+    if (skillHtmlElement !== undefined && skill.accessible === true && skill.strength !== undefined) {
+        var strengthSpan = $(skillHtmlElement).find("span#" + DuolingoDataObj.skillStrengthFieldId);
+        var strengthIndicator = makeStrengthIndicator(skill.strength);
+        var strengthColor = "color:" + makeStrengthColour(skill.strength);
+
         if (strengthSpan.length === 0) {
-            var strengthIndicator = makeStrengthIndicator(skill.strength);
-            var strengthColor = "color:" + makeStrengthColour(skill.strength);
-            var strengthHtml = '<span class="_3qO9M _33VdW" id="' + DuolingoHelper.skillStrengthFieldId + '" style="' + strengthColor + '">' + strengthIndicator + '</span>';
+            var strengthHtml = '<span class="_3qO9M _33VdW" id="' + DuolingoDataObj.skillStrengthFieldId + '" style="' + strengthColor + '">' + strengthIndicator + '</span>';
             $(skillHtmlElement).append(strengthHtml);
         }
     }
@@ -60,12 +61,12 @@ function insertSkillStrength(skill, skillHtmlElement) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-function insertSkillStrengths() {
-    var course = DuolingoHelper.course;
+function insertSkillStrengths(course) {
     // Check if the current page already contains the skill strength fields
     if (course &&
-        !DuolingoHelper.hasStrengthFields()) {
-        var skillElements = DuolingoHelper.getSkillFields();
+        isMainPage() &&
+        !hasStrengthFields()) {
+        var skillElements = $("div._2albn");
         var skillIndex = 0;
         course.skills.forEach(function (skillRow) {
             skillRow.forEach(function (skill) {
@@ -76,8 +77,13 @@ function insertSkillStrengths() {
     }
 }
 
-DuolingoHelper.onGetCourse = insertSkillStrength;
-DuolingoHelper.onPageUpdate = insertSkillStrengths;
+DuolingoDataObj.onCaughtUserId = function () {
+    DuolingoDataObj.requestCourse(insertSkillStrengths);
+}
+
+DuolingoDataObj.onPageUpdate = function () {
+    DuolingoDataObj.requestCourse(insertSkillStrengths);
+}
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
