@@ -136,7 +136,7 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
                 if( elementsOfClass.length != 1)
                 {
                     console.error("Unexected number of lesson name fields");
-                    return;
+                    continue;
                 }
 
                 skillElementMap[elementsOfClass[0].textContent] = i;
