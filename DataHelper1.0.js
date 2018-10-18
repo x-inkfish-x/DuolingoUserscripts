@@ -4,13 +4,14 @@
 
 // Data get helpers
 
+var DefaultResponseHandling = function () {};
 var DuolingoHelper = {};
 DuolingoHelper.skillStrengthFieldId = "skillStrength";
 DuolingoHelper.hostName = "https://www.duolingo.com";
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.requestCourse = function (success, error, userId = undefined) {
+DuolingoHelper.requestCourse = function (success = DefaultResponseHandling, error = DefaultResponseHandling, userId = undefined) {
     if (userId) {
         var requestUrl = DuolingoHelper.hostName + "/2017-06-30/users/" + userId + "?fields=currentCourse";
         var succesFunc = function (response) {
@@ -35,7 +36,7 @@ DuolingoHelper.requestCourse = function (success, error, userId = undefined) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.requestVocabulary = function (success, error) {
+DuolingoHelper.requestVocabulary = function (success = DefaultResponseHandling, error = DefaultResponseHandling) {
     DuolingoHelper.makeGetRequest(DuolingoHelper.hostName + "/vocabulary/overview", function (response) {
         if (response) {
             success(JSON.parse(response));
@@ -47,7 +48,7 @@ DuolingoHelper.requestVocabulary = function (success, error) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.requestDictionaryDefinition = function (lexemeId, success, error) {
+DuolingoHelper.requestDictionaryDefinition = function (lexemeId, success = DefaultResponseHandling, error = DefaultResponseHandling) {
     DuolingoHelper.makeGetRequest(DuolingoHelper.hostName + "/api/1/dictionary_page?lexeme_id=" + lexemeId, function (response) {
         if (response) {
             success(JSON.parse(response));
@@ -63,7 +64,9 @@ DuolingoHelper.makeGetRequest = function (url, success, error) {
     var xhttp = new XMLHttpRequest();
     xhttp.onerror = error;
     xhttp.onreadystatechange = function () {
-        success(xhttp.responseText);
+        delete xhttp.responseText;
+        var res = xhttp.responseText;
+        success(res);
     }
     xhttp.open("GET", url);
     xhttp.send();
@@ -129,7 +132,7 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
                 });
             });
         } else {
-            DuolingoHelper.requestCourse(DuolingoHelper.makeSkillStrengthDecorator, function(){});
+            DuolingoHelper.requestCourse(DuolingoHelper.makeSkillStrengthDecorator);
         }
     }
 }
