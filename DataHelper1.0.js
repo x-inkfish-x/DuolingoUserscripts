@@ -131,7 +131,15 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
             {
                 var element = skillElements[i];
 
-                skillElementMap[element.getElementByClassName("_33VdW").textContent] = i;
+                var elementsOfClass = element.getElementsByClassName("_33VdW").textContent;
+
+                if( elementsOfClass.length != 1)
+                {
+                    console.error("Unexected number of lesson name fields");
+                    return;
+                }
+
+                skillElementMap[elementsOfClass[0].textContent] = i;
             }
 
             course.skills.forEach(function (skillRow) {
