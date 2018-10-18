@@ -127,8 +127,11 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
             var skillIndex = 0;
             course.skills.forEach(function (skillRow) {
                 skillRow.forEach(function (skill) {
-                    DuolingoHelper.skillStrengthDecorator(skill, skillElements[skillIndex]);
-                    skillIndex++;
+                    if(skill.accessible)
+                    {
+                        DuolingoHelper.skillStrengthDecorator(skill, skillElements[skillIndex]);
+                        skillIndex++;
+                    }
                 });
             });
         } else {
