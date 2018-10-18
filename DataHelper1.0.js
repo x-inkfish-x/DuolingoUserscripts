@@ -163,11 +163,11 @@ function setupHook(xhr) {
         if (ret.length > 0) {
             var obj = JSON.parse(ret);
 
-            if (obj && 
-                obj.currentCourse && 
-                obj.id && 
+            if (obj &&
+                obj.currentCourse &&
+                obj.id &&
                 DuolingoHelper.userId != obj.id) {
-                    
+
                 DuolingoHelper.userId = obj.id;
                 if (DuolingoHelper.onCaughtUserId) {
                     DuolingoHelper.onCaughtUserId(DuolingoHelper.userId);
@@ -209,6 +209,22 @@ var config = {
 }
 
 observer.observe(target, config);
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
+// Base class helper functions
+
+String.prototype.format = function () {
+    a = this;
+
+    for (k in arguments) {
+        a = a.replace("{" + k + "}", arguments[k]);
+    }
+
+    return a;
+}
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
