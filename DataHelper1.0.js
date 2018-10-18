@@ -124,13 +124,21 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
     if (DuolingoHelper.skillStrengthDecorator) {
         if (course) {
             var skillElements = DuolingoHelper.getSkillFields();
-            var skillIndex = 0;
+
+            var skillElementMap = new Map();
+
+            for(var i = 0; i < skillElements.length; i++)
+            {
+                var element = skillElements[i];
+
+                skillElementMap[element.innerHTML] = i;
+            }
+
             course.skills.forEach(function (skillRow) {
                 skillRow.forEach(function (skill) {
                     if(skill.accessible)
                     {
-                        DuolingoHelper.skillStrengthDecorator(skill, skillElements[skillIndex]);
-                        skillIndex++;
+                        DuolingoHelper.skillStrengthDecorator(skill, skillElements[skillElementMap[skill.shortName]]);
                     }
                 });
             });
