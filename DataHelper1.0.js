@@ -131,7 +131,7 @@ DuolingoHelper.makeSkillStrengthDecorator = function (course) {
             {
                 var element = skillElements[i];
 
-                skillElementMap[element.textContent] = i;
+                skillElementMap[element.getElementByClassName("_33VdW").textContent] = i;
             }
 
             course.skills.forEach(function (skillRow) {
