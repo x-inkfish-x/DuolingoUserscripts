@@ -63,10 +63,7 @@ DuolingoHelper.makeGetRequest = function (url, success, error) {
     var xhttp = new XMLHttpRequest();
     xhttp.onerror = error;
     xhttp.onreadystatechange = function () {
-        delete xhttp.responseText;
-        var ret = xhttp.responseText;
-        success(ret);
-        return ret;
+        success(xhttp.responseText);
     }
     xhttp.open("GET", url);
     xhttp.send();
