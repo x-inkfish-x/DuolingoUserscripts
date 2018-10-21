@@ -6,9 +6,8 @@
 
 var DefaultResponseHandling = function () {};
 
-if (!DuolingoHelper || !DuolingoHelper._created) {
+if (!DuolingoHelper) {
     var DuolingoHelper = {};
-    DuolingoHelper._created = true;
     DuolingoHelper.skillStrengthFieldId = "skillStrength";
     DuolingoHelper.hostName = "https://www.duolingo.com";
     DuolingoHelper.onCaughtUserId = [];
