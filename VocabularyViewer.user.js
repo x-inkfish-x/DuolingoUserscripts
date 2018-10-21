@@ -39,7 +39,7 @@ function addVocabulary(vocab) {
 
         vocabString += "</table></div>";
         $("div._2_lzu div._21w25").after(
-            '<div class="_2SCNP _1E3L7" id="vocabulary-field"><table id="vocabulary-table" style="width:100%"><h3>Word strength</div>{0}</table></div>'.format(vocabString)).after(toggleVocabularyTable);
+            '<div class="_2SCNP _1E3L7" id="vocabulary-field"><table id="vocabulary-table" style="width:100%"><div id="vocabulary-label" class="_6Hq2p _3FQrh _1uzK0 _3f25b _2arQ0 _3skMI _2ESN4">Word strength - {0}</div>{1}</table></div>'.format(vocab.vocab_overview.length, vocabString)).after(toggleVocabularyTable);
     }
 }
 
@@ -49,7 +49,7 @@ function toggleVocabularyTable() {
     $(vocabTable).toggle();
 }
 
-$('body').on('dblclick', '#vocabulary-field', function () {
+$('body').on('click', '#vocabulary-label', function () {
     toggleVocabularyTable();
 });
 
@@ -60,15 +60,15 @@ $(function () {
     );
 });
 
-DuolingoHelper.onCaughtUserId = function () {
+DuolingoHelper.onCaughtUserId.push(function () {
     $("#vocabulary-field").remove();
     DuolingoHelper.requestVocabulary(
         addVocabulary,
         function () {}
     );
-}
+});
 
-DuolingoHelper.onPageUpdate = function (mutations) {
+DuolingoHelper.onPageUpdate.push(function (mutations) {
     mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (addedNode) {
             if (addedNode.localName == "div") {
@@ -76,7 +76,7 @@ DuolingoHelper.onPageUpdate = function (mutations) {
             }
         });
     });
-}
+});
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------

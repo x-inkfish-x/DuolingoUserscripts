@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Strength Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0
+// @version      1.1
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
@@ -47,7 +47,7 @@ function makeStrengthIndicator(strength) {
 // ---------------------------------------------------------------------------------------------------------
 
 function insertSkillStrength(skill, skillHtmlElement) {
-    if (skillHtmlElement !== undefined && skill.accessible === true && skill.strength !== undefined) {
+    if (skillHtmlElement && skill.accessible && skill.strength && skill.finishedLevels > 0) {
         var strengthSpan = $(skillHtmlElement).find("span#" + DuolingoHelper.skillStrengthFieldId);
         var strengthIndicator = makeStrengthIndicator(skill.strength);
         var strengthColor = "color:" + makeStrengthColour(skill.strength);
@@ -61,20 +61,18 @@ function insertSkillStrength(skill, skillHtmlElement) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.onCaughtUserId = function () {
-    if ( DuolingoHelper.isMainPage() &&
+DuolingoHelper.onCaughtUserId.push(function () {
+    if (DuolingoHelper.isMainPage() &&
         !DuolingoHelper.hasStrengthFields()) {
-            DuolingoHelper.makeSkillStrengthDecorator();
+        DuolingoHelper.requestCourse(function (course) {
+            DuolingoHelper.forEachSkill(course, insertSkillStrength);
+        });
     }
-}
+});
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.onPageUpdate = DuolingoHelper.onCaughtUserId;
-
-// ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.skillStrengthDecorator = insertSkillStrength;
+DuolingoHelper.onPageUpdate.push(DuolingoHelper.onCaughtUserId);
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------

@@ -8,6 +8,8 @@ var DefaultResponseHandling = function () {};
 var DuolingoHelper = {};
 DuolingoHelper.skillStrengthFieldId = "skillStrength";
 DuolingoHelper.hostName = "https://www.duolingo.com";
+DuolingoHelper.onCaughtUserId = [];
+DuolingoHelper.onPageUpdate = [];
 
 // ---------------------------------------------------------------------------------------------------------
 
@@ -120,39 +122,30 @@ DuolingoHelper.markSkillFieldsWithId = function () {
 
 // Decorator functions
 
-DuolingoHelper.makeSkillStrengthDecorator = function (course) {
-    if (DuolingoHelper.skillStrengthDecorator) {
-        if (course) {
-            var skillElements = DuolingoHelper.getSkillFields();
+DuolingoHelper.forEachSkill = function (course, functionToApply) {
+    if (course && functionToApply) {
+        var skillElements = DuolingoHelper.getSkillFields();
 
-            var skillElementMap = new Map();
+        var skillElementMap = new Map();
 
-            for(var i = 0; i < skillElements.length; i++)
-            {
-                var element = skillElements[i];
+        for (var i = 0; i < skillElements.length; i++) {
+            var element = skillElements[i];
 
-                var elementsOfClass = element.getElementsByClassName("_33VdW");
+            var elementsOfClass = element.getElementsByClassName("_33VdW");
 
-                if( elementsOfClass.length != 1)
-                {
-                    console.error("Unexected number of lesson name fields");
-                    continue;
-                }
-
-                skillElementMap[elementsOfClass[0].textContent] = i;
+            if (elementsOfClass.length != 1) {
+                console.error("Unexected number of lesson name fields");
+                continue;
             }
 
-            course.skills.forEach(function (skillRow) {
-                skillRow.forEach(function (skill) {
-                    if(skill.accessible)
-                    {
-                        DuolingoHelper.skillStrengthDecorator(skill, skillElements[skillElementMap[skill.shortName]]);
-                    }
-                });
-            });
-        } else {
-            DuolingoHelper.requestCourse(DuolingoHelper.makeSkillStrengthDecorator);
+            skillElementMap[elementsOfClass[0].textContent] = i;
         }
+
+        course.skills.forEach(function (skillRow) {
+            skillRow.forEach(function (skill) {
+                functionToApply(skill, skillElements[skillElementMap[skill.shortName]]);
+            });
+        });
     }
 }
 
@@ -188,9 +181,10 @@ function setupHook(xhr) {
                 DuolingoHelper.userId != obj.id) {
 
                 DuolingoHelper.userId = obj.id;
-                if (DuolingoHelper.onCaughtUserId) {
-                    DuolingoHelper.onCaughtUserId(DuolingoHelper.userId);
-                }
+
+                DuolingoHelper.onCaughtUserId.forEach(function (onCaught) {
+                    onCaught(DuolingoHelper.userId);
+                });
             }
         }
 
@@ -216,9 +210,9 @@ function setupHook(xhr) {
 var target = document.querySelector("body");
 
 var observer = new MutationObserver(function (mutations) {
-    if (DuolingoHelper.onPageUpdate) {
-        DuolingoHelper.onPageUpdate(mutations);
-    }
+    DuolingoHelper.onPageUpdate.forEach(function (onUpdate) {
+        onUpdate(mutations);
+    });
 });
 
 var config = {
