@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Vocabulary Viewer Experimental
 // @namespace    https://github.com/x-inkfish-x/
-// @version      0.1.15
+// @version      0.1.16
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
@@ -60,19 +60,21 @@ $(function () {
     );
 });
 
-DuolingoHelper.onCaughtUserId.push(function () {
+function addVocabularyField() {
     $("#vocabulary-field").remove();
     DuolingoHelper.requestVocabulary(
         addVocabulary,
         function () {}
     );
-});
+}
+
+DuolingoHelper.onCaughtUserId.push(addVocabularyField);
 
 DuolingoHelper.onPageUpdate.push(function (mutations) {
     mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (addedNode) {
             if (addedNode.localName == "div") {
-                DuolingoHelper.onCaughtUserId()
+                addVocabularyField();
             }
         });
     });
