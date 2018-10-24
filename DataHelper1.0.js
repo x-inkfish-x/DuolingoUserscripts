@@ -8,7 +8,6 @@ var DefaultResponseHandling = function () {};
 
 if (!DuolingoHelper) {
     var DuolingoHelper = {};
-    DuolingoHelper.skillStrengthFieldId = "skillStrength";
     DuolingoHelper.hostName = "https://www.duolingo.com";
     DuolingoHelper.onCaughtUserId = [];
     DuolingoHelper.onPageUpdate = [];
@@ -84,12 +83,6 @@ if (!DuolingoHelper) {
 
     DuolingoHelper.isMainPage = function () {
         return window.location.pathname.replace("/", "").length == 0;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------
-
-    DuolingoHelper.hasStrengthFields = function () {
-        return !(!document.getElementById(DuolingoHelper.skillStrengthFieldId));
     }
 
     // ---------------------------------------------------------------------------------------------------------
