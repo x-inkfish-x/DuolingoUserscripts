@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Strength Viewer Beta
+// @name         Strength Viewer
 // @namespace    https://github.com/x-inkfish-x/
 // @version      1.1.2
 // @description  A Duolinge userscript that adds a skill strength indicator
@@ -14,8 +14,6 @@
 // @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DataHelper1.0.js
 
 // ==/UserScript==
-
-var skillStrengthFieldId = "skillStrength";
 
 // ---------------------------------------------------------------------------------------------------------
 
@@ -50,26 +48,22 @@ function makeStrengthIndicator(strength) {
 
 function insertSkillStrength(skill, skillHtmlElement) {
     if (skillHtmlElement && skill.accessible && skill.strength && skill.finishedLevels > 0) {
-        var strengthSpan = $(skillHtmlElement).find("span#" + skillStrengthFieldId);
+        var strengthSpan = $(skillHtmlElement).find("span#" + DuolingoHelper.skillStrengthFieldId);
         var strengthIndicator = makeStrengthIndicator(skill.strength);
         var strengthColor = "color:" + makeStrengthColour(skill.strength);
 
         if (strengthSpan.length === 0) {
-            var strengthHtml = '<span class="_3qO9M _33VdW" id="' + skillStrengthFieldId + '" style="' + strengthColor + '">' + strengthIndicator + '</span>';
+            var strengthHtml = '<span class="_3qO9M _33VdW" id="' + DuolingoHelper.skillStrengthFieldId + '" style="' + strengthColor + '">' + strengthIndicator + '</span>';
             $(skillHtmlElement).append(strengthHtml);
         }
     }
-}
-
-function hasStrengthFields(){
-    return $("#" + skillStrengthFieldId).length > 0;
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
 function addSkillStrength() {
     if (DuolingoHelper.isMainPage() &&
-        !hasStrengthFields()) {
+        !DuolingoHelper.hasStrengthFields()) {
         DuolingoHelper.requestCourse(function (course) {
             DuolingoHelper.forEachSkill(course, insertSkillStrength);
         });
