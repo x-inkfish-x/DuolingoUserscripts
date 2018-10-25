@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Vocabulary Viewer Experimental
+// @name         Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
 // @version      0.1.17
 // @description  A Duolinge userscript that adds a skill strength indicator
