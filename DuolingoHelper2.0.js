@@ -151,8 +151,8 @@ DuolingoHelper.prototype.isMainPage = function () {
 DuolingoHelper.prototype.startListenForContentUpdate = function () {
     var helperThis = this;
     this.observer = new MutationObserver(function (mutations) {
-        if (this.onPageUpdate) {
-            this.onPageUpdate(mutations);
+        if (helperThis.onPageUpdate) {
+            helperThis.onPageUpdate(mutations);
         }
     });
 
@@ -180,6 +180,7 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
         rawOpen.apply(this, arguments);
     }
 
+    var helperThis = this;
     var setupHook = function (xhr) {
         var getter = function () {
             delete xhr.responseText;
@@ -188,12 +189,12 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
             if (ret.length > 0) {
                 var obj = JSON.parse(ret);
 
-                if (obj && obj.currentCourse && obj.id && obj.id != this.userId) {
-                    this.userId = obj.userId;
+                if (obj && obj.currentCourse && obj.id && obj.id != helperThis.userId) {
+                    helperThis.userId = obj.userId;
 
-                    if(this.onCaughtUserId)
+                    if(helperThis.onCaughtUserId)
                     {
-                        this.onCaughtUserId(this.userId);
+                        helperThis.onCaughtUserId(helperThis.userId);
                     }
                 }
             }
