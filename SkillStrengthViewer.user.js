@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Strength Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      2.0.2
+// @version      2.0.3
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
@@ -17,7 +17,11 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
-var helper = new DuolingoHelper(addSkillStrength, addSkillStrength);
+var helper = new DuolingoHelper({
+    onCaughtUserId: addSkillStrength,
+    onPageUpdate: addSkillStrength
+});
+
 var skillStrengthFieldId = "skillStrength";
 
 function makeStrengthColour(strength) {
