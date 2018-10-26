@@ -12,8 +12,7 @@ class DuolingoHelper {
             this.onPageUpdate = args.onPageUpdate;
         }
 
-        //this.hostName = "https://www.duolingo.com";
-        this.hostName = "";
+        this.hostName = "https://www.duolingo.com";
 
         this.startListenForHttpResponse();
         this.startListenForContentUpdate();
