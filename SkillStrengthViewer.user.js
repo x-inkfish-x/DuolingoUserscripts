@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Strength Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      2.0.3
+// @version      2.0.4
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
@@ -75,7 +75,7 @@ function insertSkillStrength(skill, skillHtmlElement) {
 // ---------------------------------------------------------------------------------------------------------
 
 function addSkillStrength() {
-    if (helper.isMainPage() && hasStrengthFields()) {
+    if (helper.isMainPage() && !hasStrengthFields()) {
             helper.requestCourse(function (course) {
                 helper.forEachSkill(course, insertSkillStrength);
         });
