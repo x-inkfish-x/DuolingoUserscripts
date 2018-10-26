@@ -118,7 +118,7 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
         }
     }
 
-    course.skills.forEach(function (skillRow) {
+    args.course.skills.forEach(function (skillRow) {
         skillRow.forEach(function (skill) {
             args.func(skill, skillElements[skillElementMap[skill.shortName]]);
         });
