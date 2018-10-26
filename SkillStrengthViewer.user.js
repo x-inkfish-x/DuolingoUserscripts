@@ -4,7 +4,7 @@
 // @version      2.0.5
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
-// @match        https://www.duolingo.com/
+// @match        https://www.duolingo.com/*
 // @run-at       document-start
 
 // @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/beta/SkillStrengthViewer.user.js
