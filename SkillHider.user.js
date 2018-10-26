@@ -17,18 +17,50 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
-// var helper = new DuolingoHelper({
-//     onCaughtUserId: ,
-//     onPageUpdate:
-// });
+var helper = new DuolingoHelper();
 
 var hiderId = 'skill-hider';
+var maxSkillStrength = 4;
+var maxStrengthToShow = maxSkillStrength;
+
+function hideSkills(skill, skillElement) {
+    if(skill.strength <= maxStrengthToShow)
+    {
+        skillElement.show();
+    }else{
+        skillElement.hide();
+    }
+}
+
+function calculateMaxStrength(skills) {
+    var minSkillStrength = 0;
+
+    skills.forEach(function(skill){
+
+    });
+
+    maxStrengthToShow--;
+
+    if( maxStrengthToShow < minSkillStrength){
+        maxStrengthToShow = maxSkillStrength;
+    }
+}
 
 $(function () {
     if ($('div#' + hiderId).length == 0) {
         $('div.mAsUf').prepend(
             '<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{0}"><span>Hide</span></div>'.format(hiderId));
     }
+});
+
+$('body').on('click', '#' + hiderId, function () {
+
+    helper.requestCourses({
+        success: function (course) {
+            calculateMaxStrength(course.skills);
+            helper.forEachSkill(course, hideSkills)
+        }
+    });
 });
 
 // ---------------------------------------------------------------------------------------------------------
