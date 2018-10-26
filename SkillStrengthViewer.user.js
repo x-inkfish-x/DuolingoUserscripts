@@ -41,7 +41,7 @@ function makeStrengthColour(strength) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-function hasStrengthFields(){
+function hasStrengthFields() {
     return $("#" + skillStrengthFieldId).length > 0;
 }
 
@@ -76,11 +76,13 @@ function insertSkillStrength(skill, skillHtmlElement) {
 
 function addSkillStrength() {
     if (helper.isMainPage() && !hasStrengthFields()) {
-            helper.requestCourse(function (course) {
+        helper.requestCourse({
+            success: function (course) {
                 helper.forEachSkill({
-                    course: course, 
+                    course: course,
                     func: insertSkillStrength
                 });
+            }
         });
     }
 }
