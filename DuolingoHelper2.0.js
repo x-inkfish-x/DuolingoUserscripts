@@ -12,9 +12,6 @@ class DuolingoHelper {
             this.onPageUpdate = args.onPageUpdate;
         }
 
-        //this.hostName = "https://www.duolingo.com";
-        this.hostName = "";
-
         this.startListenForHttpResponse();
         this.startListenForContentUpdate();
     }
@@ -29,7 +26,7 @@ class DuolingoHelper {
 DuolingoHelper.prototype.requestCourse = function (args) {
     if (args.userId) {
         this.makeGetRequest({
-            url: this.hostName + "/2017-06-30/users/" + args.userId + "?fields=currentCourse",
+            url: "/2017-06-30/users/" + args.userId + "?fields=currentCourse",
             success: function (res) {
                 if (res.length > 0) {
                     var obj = JSON.parse(res);
@@ -55,7 +52,7 @@ DuolingoHelper.prototype.requestCourse = function (args) {
 
 DuolingoHelper.prototype.requestVocabulary = function (args) {
     this.makeGetRequest({
-        url: this.hostName + "/vocabulary/overview",
+        url: "/vocabulary/overview",
         success: function (res) {
             if (res.length > 0) {
                 args.success(JSON.parse(res));
@@ -71,7 +68,7 @@ DuolingoHelper.prototype.requestVocabulary = function (args) {
 
 DuolingoHelper.prototype.requestDictionaryDefinition = function (args) {
     this.makeGetRequest({
-        url: this.hostName + "/api/1/dictionary_page?lexeme_id=" + args.lexemeId,
+        url: "/api/1/dictionary_page?lexeme_id=" + args.lexemeId,
         success: function (res) {
             if (res.length > 0) {
                 args.success(JSON.parse(res));
