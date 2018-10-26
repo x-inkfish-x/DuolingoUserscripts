@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Hider Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.3
+// @version      1.0.4
 // @description  A Duolinge userscript that hides skills exceeding a strength treshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -24,10 +24,9 @@ var maxSkillStrength = 4;
 var maxStrengthToShow = maxSkillStrength;
 
 function hideSkills(skill, skillElement) {
-    if(skill.strength <= maxStrengthToShow)
-    {
+    if (skill.strength <= maxStrengthToShow) {
         skillElement.show();
-    }else{
+    } else {
         skillElement.hide();
     }
 }
@@ -35,13 +34,13 @@ function hideSkills(skill, skillElement) {
 function calculateMaxStrength(skills) {
     var minSkillStrength = 0;
 
-    skills.forEach(function(skill){
+    skills.forEach(function (skill) {
 
     });
 
     maxStrengthToShow--;
 
-    if( maxStrengthToShow < minSkillStrength){
+    if (maxStrengthToShow < minSkillStrength) {
         maxStrengthToShow = maxSkillStrength;
     }
 }
@@ -49,13 +48,14 @@ function calculateMaxStrength(skills) {
 $(function () {
     if ($('div#' + hiderId).length == 0) {
         $('div.mAsUf').prepend(
-            '<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{0}"><span>Hide</span></div>'.format(hiderId));
+            '<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{0}"><span>Hide</span></div>'.format(hiderId)
+        );
     }
 });
 
 $('body').on('click', '#' + hiderId, function () {
 
-    helper.requestCourses({
+    helper.requestCourse({
         success: function (course) {
             calculateMaxStrength(course.skills);
             helper.forEachSkill(course, hideSkills)
