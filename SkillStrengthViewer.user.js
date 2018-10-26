@@ -78,10 +78,12 @@ function addSkillStrength() {
     if (helper.isMainPage() && !hasStrengthFields()) {
         helper.requestCourse({
             success: function (course) {
-                helper.forEachSkill({
-                    course: course,
-                    func: insertSkillStrength
-                });
+                if (course) {
+                    helper.forEachSkill({
+                        course: course,
+                        func: insertSkillStrength
+                    });
+                }
             }
         });
     }
