@@ -202,7 +202,7 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
 
             setup();
             return ret;
-        }
+        }.bind(this)
 
         var setup = function(){
             Object.defineProperty(xhr, 'responseText',{
@@ -212,7 +212,7 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
         }
 
         setup();
-    }.bind(this); 
+    }.bind(this)
 }
 
 // ---------------------------------------------------------------------------------------------------------
