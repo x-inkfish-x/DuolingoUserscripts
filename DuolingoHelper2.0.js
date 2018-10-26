@@ -191,7 +191,7 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
                 var obj = JSON.parse(ret);
 
                 if (obj && obj.currentCourse && obj.id && obj.id != this.userId) {
-                    this.userId = obj.userId;
+                    this.userId = obj.id;
 
                     if(this.onCaughtUserId)
                     {
