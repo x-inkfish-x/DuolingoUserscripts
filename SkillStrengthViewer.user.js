@@ -7,8 +7,8 @@
 // @match        https://www.duolingo.com/*
 // @run-at       document-start
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/beta/SkillStrengthViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/beta/SkillStrengthViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillStrengthViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillStrengthViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
