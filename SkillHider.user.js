@@ -18,10 +18,11 @@
 // ---------------------------------------------------------------------------------------------------------
 
 var helper = new DuolingoHelper();
-
 var hiderId = 'skill-hider';
 var maxSkillStrength = 4;
 var maxStrengthToShow = maxSkillStrength;
+
+// ---------------------------------------------------------------------------------------------------------
 
 function hideSkills(skill, skillElement) {
     // This multiplication is because the max skill strength is a normalised value
@@ -31,6 +32,8 @@ function hideSkills(skill, skillElement) {
         $(skillElement).hide();
     }
 }
+
+// ---------------------------------------------------------------------------------------------------------
 
 function calculateMaxStrength(skills) {
     var minSkillStrength = maxStrengthToShow;
@@ -43,10 +46,12 @@ function calculateMaxStrength(skills) {
 
     maxStrengthToShow--;
 
-    if (maxStrengthToShow < maxStrengthToShow / maxSkillStrength) {
+    if (minSkillStrength * maxSkillStrength < maxStrengthToShow) {
         maxStrengthToShow = maxSkillStrength;
     }
 }
+
+// ---------------------------------------------------------------------------------------------------------
 
 $(function () {
     if ($('div#' + hiderId).length == 0) {
@@ -56,14 +61,17 @@ $(function () {
     }
 });
 
+// ---------------------------------------------------------------------------------------------------------
+
 $('body').on('click', '#' + hiderId, function () {
 
     helper.requestCourse({
         success: function (course) {
             calculateMaxStrength(course.skills);
             helper.forEachSkill({
-                course: course, 
-                func: hideSkills})
+                course: course,
+                func: hideSkills
+            })
         }
     });
 });
