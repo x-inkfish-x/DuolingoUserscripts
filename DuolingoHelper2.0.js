@@ -172,7 +172,12 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
     var rawOpen = XMLHttpRequest.prototype.open;
 
     XMLHttpRequest.prototype.open = function () {
-        setupHook(this);
+        if(this._hooked)
+        {
+            this._hooked = true;
+            setupHook(this);
+        }
+        
         rawOpen.apply(this, arguments);
     }
 
