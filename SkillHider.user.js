@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Hider Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.8
+// @version      1.0.9
 // @description  A Duolinge userscript that hides skills exceeding a strength treshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -43,7 +43,7 @@ function calculateMaxStrength(skills) {
 
     maxStrengthToShow--;
 
-    if (maxStrengthToShow < minSkillStrength * maxSkillStrength) {
+    if (maxStrengthToShow < maxStrengthToShow / maxSkillStrength) {
         maxStrengthToShow = maxSkillStrength;
     }
 }
