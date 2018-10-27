@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Hider Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.9
+// @version      1.0.10
 // @description  A Duolinge userscript that hides skills exceeding a strength treshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
