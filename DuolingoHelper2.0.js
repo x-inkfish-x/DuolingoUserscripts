@@ -172,12 +172,11 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
     var rawOpen = XMLHttpRequest.prototype.open;
 
     XMLHttpRequest.prototype.open = function () {
-        if(this._hooked)
-        {
+        if (!this._hooked) {
             this._hooked = true;
             setupHook(this);
         }
-        
+
         rawOpen.apply(this, arguments);
     }
 
@@ -192,8 +191,7 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
                 if (obj && obj.currentCourse && obj.id && obj.id != this.userId) {
                     this.userId = obj.id;
 
-                    if(this.onCaughtUserId)
-                    {
+                    if (this.onCaughtUserId) {
                         this.onCaughtUserId(this.userId);
                     }
                 }
@@ -203,8 +201,8 @@ DuolingoHelper.prototype.startListenForHttpResponse = function () {
             return ret;
         }.bind(this)
 
-        var setup = function(){
-            Object.defineProperty(xhr, 'responseText',{
+        var setup = function () {
+            Object.defineProperty(xhr, 'responseText', {
                 get: getter,
                 configurable: true
             });
