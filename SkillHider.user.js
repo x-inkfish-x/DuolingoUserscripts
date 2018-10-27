@@ -2,7 +2,7 @@
 // @name         Skill Hider Beta
 // @namespace    https://github.com/x-inkfish-x/
 // @version      1.0.10
-// @description  A Duolinge userscript that hides skills exceeding a strength treshold
+// @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
 // @run-at       document-start
@@ -64,7 +64,6 @@ $(function () {
 // ---------------------------------------------------------------------------------------------------------
 
 $('body').on('click', '#' + hiderId, function () {
-
     helper.requestCourse({
         success: function (course) {
             calculateMaxStrength(course.skills);
