@@ -168,12 +168,13 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 
 // ---------------------------------------------------------------------------------------------------------
 
+var _hooKed = false;
 DuolingoHelper.prototype.startListenForHttpResponse = function () {
     var rawOpen = XMLHttpRequest.prototype.open;
 
     XMLHttpRequest.prototype.open = function () {
-        if (!this._hooked) {
-            this._hooked = true;
+        if (!_hooked) {
+            _hooked = true;
             setupHook(this);
         }
         rawOpen.apply(this, arguments);
