@@ -33,10 +33,12 @@ function hideSkills(skill, skillElement) {
 }
 
 function calculateMaxStrength(skills) {
-    var minSkillStrength = 0;
+    var minSkillStrength = maxStrengthToShow;
 
     skills.forEach(function (skill) {
-
+        if (minSkillStrength < skill.strength * maxStrengthToShow) {
+            minSkillStrength = skill.strength;
+        }
     });
 
     maxStrengthToShow--;
@@ -59,7 +61,9 @@ $('body').on('click', '#' + hiderId, function () {
     helper.requestCourse({
         success: function (course) {
             calculateMaxStrength(course.skills);
-            helper.forEachSkill(course, hideSkills)
+            helper.forEachSkill({
+                course: course, 
+                func: hideSkills})
         }
     });
 });
