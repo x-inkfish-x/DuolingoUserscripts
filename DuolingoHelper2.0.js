@@ -12,7 +12,6 @@ class DuolingoHelper {
             this.onPageUpdate = args.onPageUpdate;
         }
 
-        this.startListenForHttpResponse();
         this.startListenForContentUpdate();
     }
 }
@@ -111,7 +110,7 @@ DuolingoHelper.prototype.getUserId = function () {
     if (stateData && stateData.length > 0) {
         var stateDataObj = JSON.parse(stateDataString);
 
-        return stateDataObj.userId;
+        return stateDataObj.user.id;
     }
 
     return undefined;
