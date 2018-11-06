@@ -149,7 +149,7 @@ DuolingoHelper.prototype.getLocalUser = function () {
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.prototype.getUserId = function () {
-    var state = this.getState();
+    var state = this.getLocalState();
 
     if (state) {
         return state.user.id;
