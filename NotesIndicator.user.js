@@ -11,19 +11,34 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Experimental/NotesIndicator.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/Experimental/DataHelper1.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
 // ---------------------------------------------------------------------------------------------------------
 
-function addNoteIndicator(skill, skillDom) {
-    var something = true;
+var helper = new DuolingoHelper({
+    onPageUpdate: addHintsIndicator
+});
+
+function addHintsIndicator() {
+    if ($("hints-indicator").length == 0) {
+        var skills = helper.getLocalCurrentSkills();
+
+        helper.forEachSkill({
+            skills: skills,
+            func: function (skill, skillHtml) {
+                if (skill.tipsAndNotes) {
+                    $(skillHtml).append('<h2 id="hints-indicator">I</h2>');
+                }
+            }
+        });
+    }
 }
 
-DuolingoHelper.onCaughtUserId = DuolingoHelper.requestCourse(addNoteIndicator);
-
-DuolingoHelper.onPageUpdate = DuolingoHelper.onCaughtUserId;
+$(function () {
+    addHintsIndicator();
+});
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
