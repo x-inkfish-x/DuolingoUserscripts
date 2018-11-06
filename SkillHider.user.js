@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Hider Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.12
+// @version      1.0.13
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -27,9 +27,9 @@ var maxStrengthToShow = maxSkillStrength;
 function hideSkills(skill, skillElement) {
     // This multiplication is because the max skill strength is a normalised value
     if (skill.strength * maxSkillStrength <= maxStrengthToShow) {
-        $(skillElement).show();
+        $(skillElement).fadeIn();
     } else {
-        $(skillElement).hide();
+        $(skillElement).fadeOut();
     }
 }
 
@@ -38,17 +38,15 @@ function hideSkills(skill, skillElement) {
 function calculateMaxStrength(skills) {
     var minSkillStrength = 1;
 
-    skills.forEach(function (skillRow) {
-        skillRow.forEach(function (skill) {
-            if (minSkillStrength > skill.strength) {
-                minSkillStrength = skill.strength;
-            }
-        });
+    skills.forEach(function (skill) {
+        if (minSkillStrength > skill.strength) {
+            minSkillStrength = skill.strength;
+        }
     });
 
     maxStrengthToShow--;
 
-    if (minSkillStrength * maxSkillStrength >= maxStrengthToShow) {
+    if (minSkillStrength * maxSkillStrength > maxStrengthToShow) {
         maxStrengthToShow = maxSkillStrength;
     }
 }
@@ -66,14 +64,11 @@ $(function () {
 // ---------------------------------------------------------------------------------------------------------
 
 $('body').on('click', '#' + hiderId, function () {
-    helper.requestCourse({
-        success: function (course) {
-            calculateMaxStrength(course.skills);
-            helper.forEachSkill({
-                course: course,
-                func: hideSkills
-            })
-        }
+    var skills = helper.getLocalCurrentSkills();
+    calculateMaxStrength(skills);
+    helper.forEachSkill({
+        skills: skills,
+        func: hideSkills
     });
 });
 
