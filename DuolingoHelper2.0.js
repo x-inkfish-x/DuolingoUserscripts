@@ -136,6 +136,22 @@ DuolingoHelper.prototype.getLocalSkills = function (args) {
 
 // ---------------------------------------------------------------------------------------------------------
 
+DuolingoHelper.prototype.getLocalCurrentSkills = function(){
+
+    var user = this.getLocalUser();
+
+    if(user){
+        return this.getLocalSkills({
+            learnLang: user.learningLanguage,
+            fromLang: user.fromLanguage
+        });
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 DuolingoHelper.prototype.getLocalUser = function () {
     var state = this.getLocalState();
 
@@ -177,7 +193,9 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
         }
     }
 
-    args.course.skills.forEach(function (skillRow) {
+    var skills = args.course ? args.course.skills : args.skills;
+
+    skills.forEach(function (skillRow) {
         skillRow.forEach(function (skill) {
             args.func(skill, skillElements[skillElementMap[skill.shortName]]);
         });
