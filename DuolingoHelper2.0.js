@@ -104,10 +104,10 @@ DuolingoHelper.prototype.makeGetRequest = function (args) {
 
 // Local data
 
-DuolingoHelper.prototype.getState = function () {
+DuolingoHelper.prototype.getLocalState = function () {
     var stateDataString = window.localStorage.getItem("duo.state");
 
-    if (stateData && stateData.length > 0) {
+    if (stateDataString && stateDataString.length > 0) {
         return JSON.parse(stateDataString);
     }
 
@@ -116,7 +116,40 @@ DuolingoHelper.prototype.getState = function () {
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.getUserId = function () {
+DuolingoHelper.prototype.getLocalSkills = function (args) {
+    var state = this.getLocalState();
+
+    if (state) {
+        var skills = state.skills;
+
+        if (args.learnLang) {
+            skills = skills.filter(skill => skill.learningLanguage == args.learnLang);
+        }
+        if (args.fromLang) {
+            skills = skills.filter(skill => skill.fromLanguage == args.fromLang);
+        }
+
+        return skills;
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.getLocalUser = function () {
+    var state = this.getLocalState();
+
+    if (state) {
+        return state.user;
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.getLocalState = function () {
     var state = this.getState();
 
     if (state) {
