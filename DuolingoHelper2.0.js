@@ -8,7 +8,6 @@
 class DuolingoHelper {
     constructor(args) {
         if (args) {
-            this.onCaughtUserId = args.onCaughtUserId;
             this.onPageUpdate = args.onPageUpdate;
         }
 
