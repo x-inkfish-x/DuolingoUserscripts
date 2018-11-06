@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Hider Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.11
+// @version      1.0.12
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -36,12 +36,14 @@ function hideSkills(skill, skillElement) {
 // ---------------------------------------------------------------------------------------------------------
 
 function calculateMaxStrength(skills) {
-    var minSkillStrength = maxSkillStrength;
+    var minSkillStrength = 1;
 
-    skills.forEach(function (skill) {
-        if (minSkillStrength > skill.strength) {
-            minSkillStrength = skill.strength;
-        }
+    skills.forEach(function (skillRow) {
+        skillRow.forEach(function (skill) {
+            if (minSkillStrength > skill.strength) {
+                minSkillStrength = skill.strength;
+            }
+        });
     });
 
     maxStrengthToShow--;
