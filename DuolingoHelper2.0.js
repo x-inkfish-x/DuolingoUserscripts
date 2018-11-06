@@ -119,12 +119,7 @@ DuolingoHelper.prototype.getLocalSkills = function (args) {
     var state = this.getLocalState();
 
     if (state) {
-        var skillsKeys = Object.keys(state.skills);
-        var skills = [];
-
-        skillsKeys.forEach(function(key){
-            skills.append(state.skills[key]);
-        });
+        var skills = Object.values(state.skills);
 
         if (args.learnLang) {
             skills = skills.filter(skill => skill.learningLanguage == args.learnLang);
