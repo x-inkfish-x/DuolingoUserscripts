@@ -104,13 +104,23 @@ DuolingoHelper.prototype.makeGetRequest = function (args) {
 
 // Local data
 
-DuolingoHelper.prototype.getUserId = function () {
+DuolingoHelper.prototype.getState = function () {
     var stateDataString = window.localStorage.getItem("duo.state");
 
     if (stateData && stateData.length > 0) {
-        var stateDataObj = JSON.parse(stateDataString);
+        return JSON.parse(stateDataString);
+    }
 
-        return stateDataObj.user.id;
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.getUserId = function () {
+    var state = this.getState();
+
+    if (state) {
+        return state.user.id;
     }
 
     return undefined;
