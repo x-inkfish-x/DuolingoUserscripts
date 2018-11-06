@@ -136,11 +136,11 @@ DuolingoHelper.prototype.getLocalSkills = function (args) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.getLocalCurrentSkills = function(){
+DuolingoHelper.prototype.getLocalCurrentSkills = function () {
 
     var user = this.getLocalUser();
 
-    if(user){
+    if (user) {
         return this.getLocalSkills({
             learnLang: user.learningLanguage,
             fromLang: user.fromLanguage
@@ -193,13 +193,18 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
         }
     }
 
-    var skills = args.course ? args.course.skills : args.skills;
-
-    skills.forEach(function (skillRow) {
-        skillRow.forEach(function (skill) {
+    if (args.course) {
+        args.course.skills.forEach(function (skillRow) {
+            skillRow.forEach(function (skill) {
+                args.func(skill, skillElements[skillElementMap[skill.shortName]]);
+            });
+        });
+    } else {
+        args.skills.forEach(function (skill) {
             args.func(skill, skillElements[skillElementMap[skill.shortName]]);
         });
-    });
+    }
+
 }
 
 // ---------------------------------------------------------------------------------------------------------
