@@ -42,9 +42,12 @@ DuolingoHelper.prototype.requestCourse = function (args) {
             },
             error: args.error
         });
-    } else if (this.userId) {
-        args.userId = this.userId;
-        this.requestCourse(args);
+    } else {
+        var userId = this.getUserId();
+        if (userId) {
+            args.userId = userId;
+            this.requestCourse(args);
+        }
     }
 }
 
@@ -94,6 +97,24 @@ DuolingoHelper.prototype.makeGetRequest = function (args) {
 
     xhr.open("GET", args.url);
     xhr.send();
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
+// Local data
+
+DuolingoHelper.prototype.getUserId = function () {
+    var stateDataString = window.localStorage.getItem("duo.state");
+
+    if (stateData && stateData.length > 0) {
+        var stateDataObj = JSON.parse(stateDataString);
+
+        return stateDataObj.userId;
+    }
+
+    return undefined;
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -164,52 +185,6 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
     }
 
     this.observer.observe(target, config);
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.prototype.startListenForHttpResponse = function () {
-    var rawOpen = XMLHttpRequest.prototype.open;
-
-    XMLHttpRequest.prototype.open = function () {
-        if (!this._hooked) {
-            this._hooked = true;
-            setupHook(this);
-        }
-
-        rawOpen.apply(this, arguments);
-    }
-
-    var setupHook = function (xhr) {
-        var getter = function () {
-            delete xhr.responseText;
-            var ret = xhr.responseText;
-
-            if (ret.length > 0) {
-                var obj = JSON.parse(ret);
-
-                if (obj && obj.currentCourse && obj.id && obj.id != this.userId) {
-                    this.userId = obj.id;
-
-                    if (this.onCaughtUserId) {
-                        this.onCaughtUserId(this.userId);
-                    }
-                }
-            }
-
-            setup();
-            return ret;
-        }.bind(this)
-
-        var setup = function () {
-            Object.defineProperty(xhr, 'responseText', {
-                get: getter,
-                configurable: true
-            });
-        }
-
-        setup();
-    }.bind(this)
 }
 
 // ---------------------------------------------------------------------------------------------------------
