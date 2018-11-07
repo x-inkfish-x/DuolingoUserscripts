@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Tips and Notes Indicator
+// @name         Tips and Notes Indicator Beta
 // @namespace    https://github.com/x-inkfish-x/
 // @version      0.1.1
 // @description  A Duolingo userscripts that adds an indicator to skills with tips and notes
