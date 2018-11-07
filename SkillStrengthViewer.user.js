@@ -1,24 +1,23 @@
 // ==UserScript==
-// @name         Strength Viewer
+// @name         Strength Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      2.0.7
+// @version      2.0.9
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
 // @run-at       document-start
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillStrengthViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillStrengthViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillStrengthViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillStrengthViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
 // ---------------------------------------------------------------------------------------------------------
 
 var helper = new DuolingoHelper({
-    onCaughtUserId: addSkillStrength,
     onPageUpdate: addSkillStrength
 });
 
@@ -76,18 +75,17 @@ function insertSkillStrength(skill, skillHtmlElement) {
 
 function addSkillStrength() {
     if (helper.isMainPage() && !hasStrengthFields()) {
-        helper.requestCourse({
-            success: function (course) {
-                if (course) {
-                    helper.forEachSkill({
-                        course: course,
-                        func: insertSkillStrength
-                    });
-                }
-            }
+        var skills = helper.getLocalCurrentSkills();
+        helper.forEachSkill({
+            skills: skills,
+            func: insertSkillStrength
         });
     }
 }
+
+// ---------------------------------------------------------------------------------------------------------
+
+$(addSkillStrength);
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------

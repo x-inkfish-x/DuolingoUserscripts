@@ -8,11 +8,9 @@
 class DuolingoHelper {
     constructor(args) {
         if (args) {
-            this.onCaughtUserId = args.onCaughtUserId;
             this.onPageUpdate = args.onPageUpdate;
         }
 
-        this.startListenForHttpResponse();
         this.startListenForContentUpdate();
     }
 }
@@ -42,9 +40,12 @@ DuolingoHelper.prototype.requestCourse = function (args) {
             },
             error: args.error
         });
-    } else if (this.userId) {
-        args.userId = this.userId;
-        this.requestCourse(args);
+    } else {
+        var userId = this.getUserId();
+        if (userId) {
+            args.userId = userId;
+            this.requestCourse(args);
+        }
     }
 }
 
@@ -100,26 +101,139 @@ DuolingoHelper.prototype.makeGetRequest = function (args) {
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 
+// Local data
+
+DuolingoHelper.prototype.getLocalState = function () {
+    var stateDataString = window.localStorage.getItem("duo.state");
+
+    if (stateDataString && stateDataString.length > 0) {
+        return JSON.parse(stateDataString);
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.getLocalSkills = function (args) {
+    var state = this.getLocalState();
+
+    if (state) {
+        var skills = Object.values(state.skills);
+
+        if (args.learnLang) {
+            skills = skills.filter(skill => skill.learningLanguage == args.learnLang);
+        }
+        if (args.fromLang) {
+            skills = skills.filter(skill => skill.fromLanguage == args.fromLang);
+        }
+
+        return skills;
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.getLocalCurrentSkills = function () {
+
+    var user = this.getLocalUser();
+
+    if (user) {
+        return this.getLocalSkills({
+            learnLang: user.learningLanguage,
+            fromLang: user.fromLanguage
+        });
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.getLocalUser = function () {
+    var state = this.getLocalState();
+
+    if (state) {
+        return state.user;
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.getUserId = function () {
+    var state = this.getLocalState();
+
+    if (state) {
+        return state.user.id;
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------
+
 // Iteration helpers
+
+DuolingoHelper.prototype.findReactElement = function (node) {
+    for (var key in node) {
+        if (key.startsWith("__reactInternalInstance$")) {
+            var prop = node[key];
+
+            if (!prop._currentElement) continue;
+
+            return prop._currentElement.props;
+        }
+    }
+    return null;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.mapSkillElementsToId = function (skillArray) {
+    var map = new Map();
+
+    for (var i = 0; i < skillArray.length; ++i) {
+        var el = $(skillArray[i]).find('div._2albn');
+        if (el.length == 0) continue;
+
+        var reactEl = this.findReactElement(el[0]);
+        if (reactEl.children.length == 0) continue;
+
+        var skill = reactEl.children[0].props.skill;
+
+        if (!skill) continue;
+
+        map[skill.id] = i;
+    }
+
+    return map;
+}
+
+// ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.prototype.forEachSkill = function (args) {
     var skillElements = this.getSkillFields();
+    if (skillElements.length == 0) return;
 
-    var skillElementMap = new Map();
+    var skillElementMap = this.mapSkillElementsToId(skillElements);
 
-    for (var i = 0; i < skillElements.length; i++) {
-        var elementsOfClass = skillElements[i].getElementsByClassName("_33VdW");
-
-        if (elementsOfClass.length > 0) {
-            skillElementMap[elementsOfClass[0].textContent] = i;
-        }
-    }
-
-    args.course.skills.forEach(function (skillRow) {
-        skillRow.forEach(function (skill) {
-            args.func(skill, skillElements[skillElementMap[skill.shortName]]);
+    if (args.course) {
+        args.course.skills.forEach(function (skillRow) {
+            skillRow.forEach(function (skill) {
+                args.func(skill, skillElements[skillElementMap[skill.id]]);
+            });
         });
-    });
+    } else {
+        args.skills.forEach(function (skill) {
+            args.func(skill, skillElements[skillElementMap[skill.id]]);
+        });
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -164,52 +278,6 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
     }
 
     this.observer.observe(target, config);
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.prototype.startListenForHttpResponse = function () {
-    var rawOpen = XMLHttpRequest.prototype.open;
-
-    XMLHttpRequest.prototype.open = function () {
-        if (!this._hooked) {
-            this._hooked = true;
-            setupHook(this);
-        }
-
-        rawOpen.apply(this, arguments);
-    }
-
-    var setupHook = function (xhr) {
-        var getter = function () {
-            delete xhr.responseText;
-            var ret = xhr.responseText;
-
-            if (ret.length > 0) {
-                var obj = JSON.parse(ret);
-
-                if (obj && obj.currentCourse && obj.id && obj.id != this.userId) {
-                    this.userId = obj.id;
-
-                    if (this.onCaughtUserId) {
-                        this.onCaughtUserId(this.userId);
-                    }
-                }
-            }
-
-            setup();
-            return ret;
-        }.bind(this)
-
-        var setup = function () {
-            Object.defineProperty(xhr, 'responseText', {
-                get: getter,
-                configurable: true
-            });
-        }
-
-        setup();
-    }.bind(this)
 }
 
 // ---------------------------------------------------------------------------------------------------------
