@@ -180,28 +180,58 @@ DuolingoHelper.prototype.getUserId = function () {
 
 // Iteration helpers
 
-DuolingoHelper.prototype.forEachSkill = function (args) {
-    var skillElements = this.getSkillFields();
+DuolingoHelper.prototype.findReactElement = function (node) {
+    for (var key in node) {
+        if (key.startsWith("__reactInternalInstance$")) {
+            var prop = node[key];
 
-    var skillElementMap = new Map();
+            if (!prop._currentElement) continue;
 
-    for (var i = 0; i < skillElements.length; i++) {
-        var elementsOfClass = skillElements[i].getElementsByClassName("_33VdW");
-
-        if (elementsOfClass.length > 0) {
-            skillElementMap[elementsOfClass[0].textContent] = i;
+            return prop._currentElement.props;
         }
     }
+    return null;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.mapSkillElementsToId = function (skillArray) {
+    var map = new Map();
+
+    for (var i = 0; i < skillArray.length; ++i) {
+        var el = $(skillArray[i]).find('div._2albn');
+        if (el.length == 0) continue;
+
+        var reactEl = this.findReactElement(el[0]);
+        if (reactEl.children.length == 0) continue;
+
+        var skill = reactEl.children[0].props.skill;
+
+        if (!skill) continue;
+
+        map[skill.id] = i;
+    }
+
+    return map;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.forEachSkill = function (args) {
+    var skillElements = this.getSkillFields();
+    if (skillElements.length == 0) return;
+
+    var skillElementMap = this.mapSkillElementsToId(skillElements);
 
     if (args.course) {
         args.course.skills.forEach(function (skillRow) {
             skillRow.forEach(function (skill) {
-                args.func(skill, skillElements[skillElementMap[skill.shortName]]);
+                args.func(skill, skillElements[skillElementMap[skill.id]]);
             });
         });
     } else {
         args.skills.forEach(function (skill) {
-            args.func(skill, skillElements[skillElementMap[skill.shortName]]);
+            args.func(skill, skillElements[skillElementMap[skill.id]]);
         });
     }
 }
