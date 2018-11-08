@@ -22,7 +22,7 @@ var css = `
 }
 
 .skill-vocab .icon{
-    cursor: pointer;  
+    cursor: pointer;
     color: gold;
     position: absolute;
     top:0;
@@ -35,7 +35,7 @@ var css = `
     left: 50%;
     transform: translate(-50%, -45%);
 
-    width: 17em;
+    width: 20em;
     height: 85%;
 
     padding-top: 1em;
@@ -52,7 +52,7 @@ var css = `
 
 .skill-vocab .container .text{
     overflow-y: auto;
-    font-size: 0.5em;
+    font-size: 0.45em;
 
     text-align: left;
     line-height: 1.5em;
@@ -126,23 +126,51 @@ function addError(element, vocab) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-function populateContainer(element, vocab) {
-    var text = $(element).find('div.container .text');
-    $(text).empty();
+function populateSingleWord(text, vocab, i) {
+    var v = vocab[i];
 
-    vocab.forEach(function (v) {
-        helper.requestDictionaryDefinition({
-            lexemeId: v.lexeme_id,
-            success: function (obj) {
-                if (obj) {
-                    addDefinition(text, obj);
-                }
-            },
-            error: function () {
-                addError(text, v);
+    helper.requestDictionaryDefinition({
+        lexemeId: v.lexeme_id,
+        success: function (obj) {
+            if (obj) {
+                addDefinition(text, obj);
             }
-        });
+
+            if (i < vocab.length) {
+                populateSingleWord(text, vocab, i + 1);
+            }
+        },
+        error: function () {
+            addError(text, v);
+            if (i < vocab.length) {
+                populateSingleWord(text, vocab, i + 1);
+            }
+        }
     });
+}
+
+function populateContainer(element, vocab) {
+    if (vocab.length > 0) {
+        var text = $(element).find('div.container .text');
+        $(text).empty();
+
+        populateSingleWord(text, vocab, 0);
+    }
+
+
+    //     vocab.forEach(function (v) {
+    //         helper.requestDictionaryDefinition({
+    //             lexemeId: v.lexeme_id,
+    //             success: function (obj) {
+    //                 if (obj) {
+    //                     addDefinition(text, obj);
+    //                 }
+    //             },
+    //             error: function () {
+    //                 addError(text, v);
+    //             }
+    //         });
+    //     });
 }
 
 function showContainer(element) {

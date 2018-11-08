@@ -206,18 +206,21 @@ DuolingoHelper.prototype.findReactElement = function (node) {
 DuolingoHelper.prototype.mapSkillElementsToId = function (skillArray) {
     var map = new Map();
 
-    for (var i = 0; i < skillArray.length; ++i) {
-        var el = $(skillArray[i]).find('div._2albn');
-        if (el.length == 0) continue;
-
-        var reactEl = this.findReactElement(el[0]);
-        if (reactEl.children.length == 0) continue;
-
-        var skill = reactEl.children[0].props.skill;
-
-        if (!skill) continue;
-
-        map[skill.id] = i;
+    if(skillArray)
+    {
+        for (var i = 0; i < skillArray.length; ++i) {
+            var el = $(skillArray[i]).find('div._2albn');
+            if (el.length == 0) continue;
+    
+            var reactEl = this.findReactElement(el[0]);
+            if (reactEl.children.length == 0) continue;
+    
+            var skill = reactEl.children[0].props.skill;
+    
+            if (!skill) continue;
+    
+            map[skill.id] = i;
+        }
     }
 
     return map;
