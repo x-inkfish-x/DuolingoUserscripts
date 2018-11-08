@@ -27,28 +27,49 @@ var hintCss = `
    left:0;
 }
 
-.hover-hint .hover-hint-text{
+.hover-hint .hover-hint-container{
    position: fixed;
    top: 50%;
    left: 50%;
    transform: translate(-50%, -50%);
 
    width: 60%;
-   max-height: 85%;
-   overflow-y: auto;
-   font-size: 0.5em;
+   height: 85%;
 
-   background-color: #dddddd;
-   color: #333;
-   text-align: left;
-   border-radius: 0.25em;
-   padding: 1em;
-   padding-left: 2em;
-   z-index: 100;
-   line-height: 1.2em;
+   padding-top: 1em;
+   padding-bottom: 1em;
 
    border-style: solid;
    border-color: #555;
+   border-radius: 1em;
+
+   z-index: 100;
+
+   background-color: #dddddd;
+}
+
+.hover-hint-container .hover-hint-text{
+   overflow-y: auto;
+   font-size: 0.5em;
+
+   text-align: left;
+   line-height: 1.2em;
+
+   padding: 1em;
+   padding-left: 2em;
+
+   color: #333;
+
+   max-height: 100%;
+   max-width: 100%;
+}
+
+.exit-hint{
+   position: absolute;
+   top: 0.45em;
+   left: 0.42em;
+   font-size: 1em;
+   color: #534;
 }
 `;
 
@@ -58,6 +79,15 @@ var helper = new DuolingoHelper({
 
 var delay=1000, setTimeoutConst;
 
+var hideHint = function(obj){
+    var hoverHintEl = $(obj.target).closest('div.hover-hint-container');
+    if($(hoverHintEl).css('display') != 'none'){
+        obj.stopPropagation();
+        $(hoverHintEl).fadeOut(500);
+        return false;
+    }
+}
+
 function addHintsIndicator() {
     if ($("#hints-indicator").length == 0) {
         var skills = helper.getLocalCurrentSkills();
@@ -66,11 +96,11 @@ function addHintsIndicator() {
             skills: skills,
             func: function (skill, skillHtml) {
                 if (skill.tipsAndNotes) {
-                    var skillTips = $('<div class="hover-hint-text">' + skill.tipsAndNotes + '</div>').hide();
+                    var skillTips = $('<div class="hover-hint-container"><div class="hover-hint-text">' + skill.tipsAndNotes + '</div></div>').hide();
 
                     $(skillHtml).append('<div class="hover-hint" id="hints-indicator">&#128712;</div>').find('div.hover-hint')
                         .hover( function(obj){
-                            var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-text');
+                            var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-container');
                             var hintVisible = $(hoverHintEl).css('display');
                             if( hintVisible == 'none')
                             {
@@ -84,11 +114,13 @@ function addHintsIndicator() {
                                , function(){
                             clearTimeout(setTimeoutConst);
                         }).on('dblclick', function(obj){
-                            var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-text');
-                            if($(hoverHintEl).css('visibility') == 'visible'){
-                                $(hoverHintEl).fadeOut(500);
-                            }
-                        }).append(skillTips);
+                        hideHint(obj, '');
+                    }).append(skillTips).find('div.hover-hint-container').click(function(obj){
+                           if( $(obj.target).hasClass('exit-hint')){
+                               hideHint(obj)
+                           }
+
+                    }).append('<span class="exit-hint" title="Close">&times;</span>');
                 }
             }
         });
