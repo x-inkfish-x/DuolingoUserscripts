@@ -89,7 +89,15 @@ DuolingoHelper.prototype.makeGetRequest = function (args) {
     xhr.onreadystatechange = function () {
         delete xhr.responseText;
         var res = xhr.responseText;
-        args.success(res);
+        if (xhr.status == 200) {
+            if (xhr.readyState == 4) {
+                args.success(res);
+            }
+        } else if (xhr.status != 0) {
+            if (args.error) {
+                args.error();
+            }
+        }
         return res;
     }
 
@@ -198,18 +206,21 @@ DuolingoHelper.prototype.findReactElement = function (node) {
 DuolingoHelper.prototype.mapSkillElementsToId = function (skillArray) {
     var map = new Map();
 
-    for (var i = 0; i < skillArray.length; ++i) {
-        var el = $(skillArray[i]).find('div._2albn');
-        if (el.length == 0) continue;
-
-        var reactEl = this.findReactElement(el[0]);
-        if (reactEl.children.length == 0) continue;
-
-        var skill = reactEl.children[0].props.skill;
-
-        if (!skill) continue;
-
-        map[skill.id] = i;
+    if(skillArray)
+    {
+        for (var i = 0; i < skillArray.length; ++i) {
+            var el = $(skillArray[i]).find('div._2albn');
+            if (el.length == 0) continue;
+    
+            var reactEl = this.findReactElement(el[0]);
+            if (reactEl.children.length == 0) continue;
+    
+            var skill = reactEl.children[0].props.skill;
+    
+            if (!skill) continue;
+    
+            map[skill.id] = i;
+        }
     }
 
     return map;
@@ -219,7 +230,7 @@ DuolingoHelper.prototype.mapSkillElementsToId = function (skillArray) {
 
 DuolingoHelper.prototype.forEachSkill = function (args) {
     var skillElements = this.getSkillFields();
-    if (skillElements.length == 0) return;
+    if (skillElements && skillElements.length == 0) return;
 
     var skillElementMap = this.mapSkillElementsToId(skillElements);
 
@@ -243,6 +254,28 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
 // Page area helpers
 
 DuolingoHelper.prototype.getSkillFields = function () {
+    // var skillFieldId = 'language-skill-field';
+    // var els = document.getElementsByClassName(skillFieldId);
+
+    // if (els.length == 0) {
+    //     var linkEls = document.getElementsByClassName("Af4up");
+
+    //     if (linkEls.length > 0) {
+    //         var asArr = Array.from(linkEls);
+    //         asArr.forEach(function (el) {
+    //             var wrapper = document.createElement('div');
+    //             wrapper.setAttribute('class', 'Af4up ' + skillFieldId);
+    //             el.parentNode.insertBefore(wrapper, el);
+    //             wrapper.appendChild(el);
+    //         });
+
+    //         return document.getElementsByClassName(skillFieldId)
+    //     }
+
+    //     return undefined;
+    // }
+
+    // return els;
     return document.getElementsByClassName("Af4up");
 }
 
@@ -288,7 +321,7 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 String.prototype.format = function (args) {
     a = this;
 
-    Object.keys(args).forEach(function(k){
+    Object.keys(args).forEach(function (k) {
         a = a.replace("{" + k + "}", args[k]);
     });
 
