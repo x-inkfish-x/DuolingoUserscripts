@@ -285,10 +285,10 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 // ---------------------------------------------------------------------------------------------------------
 
 // Other useful functions
-String.prototype.format = function () {
+String.prototype.format = function (args) {
     a = this;
 
-    for (k in arguments) {
+    for (k in args.keys()) {
         a = a.replace("{" + k + "}", arguments[k]);
     }
 
