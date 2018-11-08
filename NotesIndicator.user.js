@@ -32,14 +32,12 @@ var hintCss = `
    top: 50%;
    left: 50%;
    transform: translate(-50%, -50%);
-   
+
    width: 60%;
    max-height: 85%;
    overflow-y: auto;
    font-size: 0.5em;
 
-   visibility: hidden;
-   
    background-color: #dddddd;
    color: #333;
    text-align: left;
@@ -47,24 +45,18 @@ var hintCss = `
    padding: 1em;
    padding-left: 2em;
    z-index: 100;
-   opacity: 0;
-   transition: opacity 1s;
    line-height: 1.2em;
 
    border-style: solid;
    border-color: #555;
-}
-
-.hover-hint:hover .hover-hint-text {
-   visibility: visible;
-   opacity: 1;
-   transition-delay:1s;
 }
 `;
 
 var helper = new DuolingoHelper({
     onPageUpdate: addHintsIndicator
 });
+
+var delay=1000, setTimeoutConst;
 
 function addHintsIndicator() {
     if ($("#hints-indicator").length == 0) {
@@ -74,7 +66,29 @@ function addHintsIndicator() {
             skills: skills,
             func: function (skill, skillHtml) {
                 if (skill.tipsAndNotes) {
-                    $(skillHtml).append('<div class="hover-hint" id="hints-indicator">&#128712;<span class="hover-hint-text">' + skill.tipsAndNotes + '</span></div>');
+                    var skillTips = $('<div class="hover-hint-text">' + skill.tipsAndNotes + '</div>').hide();
+
+                    $(skillHtml).append('<div class="hover-hint" id="hints-indicator">&#128712;</div>').find('div.hover-hint')
+                        .hover( function(obj){
+                            var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-text');
+                            var hintVisible = $(hoverHintEl).css('display');
+                            if( hintVisible == 'none')
+                            {
+                                setTimeoutConst = setTimeout( function(){
+                                {
+                                    $(hoverHintEl).fadeIn(500);
+                                }
+                            }, delay);
+                        }
+                    }
+                               , function(){
+                            clearTimeout(setTimeoutConst);
+                        }).on('dblclick', function(obj){
+                            var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-text');
+                            if($(hoverHintEl).css('visibility') == 'visible'){
+                                $(hoverHintEl).fadeOut(500);
+                            }
+                        }).append(skillTips);
                 }
             }
         });
