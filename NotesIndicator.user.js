@@ -20,73 +20,62 @@
 
 var hintCss = `
 .hover-hint{
-   color: gold;
-   font-size: 3em;
-   position: absolute;
-   top:0;
-   left:0;
+    color: gold;
+    font-size: 3em;
+    position: absolute;
+    top:0;
+    left:0;
 }
 
 .hover-hint .hover-hint-container{
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
 
-   width: 60%;
-   height: 85%;
+    width: 60%;
+    height: 85%;
 
-   padding-top: 1em;
-   padding-bottom: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
 
-   border-style: solid;
-   border-color: #555;
-   border-radius: 1em;
+    border-style: solid;
+    border-color: #555;
+    border-radius: 1em;
 
-   z-index: 100;
+    z-index: 100;
 
-   background-color: #dddddd;
+    background-color: #dddddd;
 }
 
 .hover-hint-container .hover-hint-text{
-   overflow-y: auto;
-   font-size: 0.5em;
+    overflow-y: auto;
+    font-size: 0.5em;
 
-   text-align: left;
-   line-height: 1.2em;
+    text-align: left;
+    line-height: 1.2em;
 
-   padding: 1em;
-   padding-left: 2em;
+    padding: 1em;
+    padding-left: 2em;
 
-   color: #333;
+    color: #333;
 
-   max-height: 100%;
-   max-width: 100%;
+    max-height: 100%;
+    max-width: 100%;
 }
 
 .exit-hint{
-   position: absolute;
-   top: 0.45em;
-   left: 0.42em;
-   font-size: 1em;
-   color: #534;
+    position: absolute;
+    top: 0.45em;
+    left: 0.42em;
+    font-size: 1em;
+    color: #534;
 }
 `;
 
 var helper = new DuolingoHelper({
     onPageUpdate: addHintsIndicator
 });
-
-var delay=1000, setTimeoutConst;
-
-var hideHint = function(obj){
-    var hoverHintEl = $(obj.target).closest('div.hover-hint-container');
-    if($(hoverHintEl).css('display') != 'none'){
-        obj.stopPropagation();
-        $(hoverHintEl).fadeOut(500);
-        return false;
-    }
-}
 
 function addHintsIndicator() {
     if ($("#hints-indicator").length == 0) {
@@ -98,29 +87,28 @@ function addHintsIndicator() {
                 if (skill.tipsAndNotes) {
                     var skillTips = $('<div class="hover-hint-container"><div class="hover-hint-text">' + skill.tipsAndNotes + '</div></div>').hide();
 
-                    $(skillHtml).append('<div class="hover-hint" id="hints-indicator">&#128712;</div>').find('div.hover-hint')
-                        .hover( function(obj){
+                    $(skillHtml)
+                        .append('<div class="hover-hint" id="hints-indicator">&#128712;</div>')
+                        .find('div.hover-hint')
+                        .click(function (obj) {
                             var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-container');
                             var hintVisible = $(hoverHintEl).css('display');
-                            if( hintVisible == 'none')
-                            {
-                                setTimeoutConst = setTimeout( function(){
-                                {
-                                    $(hoverHintEl).fadeIn(500);
-                                }
-                            }, delay);
-                        }
-                    }
-                               , function(){
-                            clearTimeout(setTimeoutConst);
-                        }).on('dblclick', function(obj){
-                        hideHint(obj, '');
-                    }).append(skillTips).find('div.hover-hint-container').click(function(obj){
-                           if( $(obj.target).hasClass('exit-hint')){
-                               hideHint(obj)
-                           }
-
-                    }).append('<span class="exit-hint" title="Close">&times;</span>');
+                            if (hintVisible == 'none') {
+                                $(hoverHintEl).fadeIn(500);
+                            }
+                        })
+                        .append(skillTips)
+                        .find('div.hover-hint-container')
+                        .append('<span class="exit-hint" title="Close">&times;</span>')
+                        .find('span.exit-hint')
+                        .click(function (obj) {
+                            var hoverHintEl = $(obj.target).closest('div.hover-hint-container');
+                            if ($(hoverHintEl).css('display') != 'none') {
+                                obj.stopPropagation();
+                                $(hoverHintEl).fadeOut(500);
+                                return false;
+                            }
+                        });
                 }
             }
         });
