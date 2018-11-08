@@ -243,7 +243,26 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
 // Page area helpers
 
 DuolingoHelper.prototype.getSkillFields = function () {
-    return document.getElementsByClassName("Af4up");
+    var skillFieldId = 'language-skill-field';
+    var els = document.getElementsByClassName(skillFieldId);
+
+    if (els.length == 0) {
+        els = document.getElementsByClassName("Af4up");
+
+        if (els.length > 0) {
+            var asArr = Array.from(els);
+            asArr.forEach(function (el) {
+                var wrapper = document.createElement('div');
+                wrapper.setAttribute('class', 'Af4up ' + skillFieldId);
+                el.parentNode.insertBefore(wrapper, el);
+                wrapper.appendChild(el);
+            });
+
+            return document.getElementsByClassName(skillFieldId)
+        }
+    }
+
+    return els;
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -288,7 +307,7 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 String.prototype.format = function (args) {
     a = this;
 
-    Object.keys(args).forEach(function(k){
+    Object.keys(args).forEach(function (k) {
         a = a.replace("{" + k + "}", args[k]);
     });
 
