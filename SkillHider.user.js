@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Skill Hider
+// @name         Skill Hider Beta
 // @namespace    https://github.com/x-inkfish-x/
 // @version      1.0.14
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
@@ -7,11 +7,11 @@
 // @match        https://www.duolingo.com/*
 // @run-at       document-start
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillHider.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillHider.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillHider.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillHider.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
