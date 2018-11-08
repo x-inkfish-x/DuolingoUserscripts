@@ -89,7 +89,15 @@ DuolingoHelper.prototype.makeGetRequest = function (args) {
     xhr.onreadystatechange = function () {
         delete xhr.responseText;
         var res = xhr.responseText;
-        args.success(res);
+        if (xhr.status == 200) {
+            if (xhr.readyState == 4) {
+                args.success(res);
+            }
+        } else {
+            if (args.error) {
+                args.error();
+            }
+        }
         return res;
     }
 
@@ -219,7 +227,7 @@ DuolingoHelper.prototype.mapSkillElementsToId = function (skillArray) {
 
 DuolingoHelper.prototype.forEachSkill = function (args) {
     var skillElements = this.getSkillFields();
-    if (skillElements.length == 0) return;
+    if (skillElements && skillElements.length == 0) return;
 
     var skillElementMap = this.mapSkillElementsToId(skillElements);
 
