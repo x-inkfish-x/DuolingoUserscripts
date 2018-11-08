@@ -85,22 +85,8 @@ function addHintsIndicator() {
             skills: skills,
             func: function (skill, skillHtml) {
                 if (skill.tipsAndNotes) {
-                    var skillTips = $('<div class="hover-hint-container"><div class="hover-hint-text">' + skill.tipsAndNotes + '</div></div>').hide();
-
-                    $(skillHtml)
-                        .append('<div class="hover-hint" id="hints-indicator">&#128712;</div>')
-                        .find('div.hover-hint')
-                        .click(function (obj) {
-                            var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-container');
-                            var hintVisible = $(hoverHintEl).css('display');
-                            if (hintVisible == 'none') {
-                                $(hoverHintEl).fadeIn(500);
-                            }
-                        })
-                        .append(skillTips)
-                        .find('div.hover-hint-container')
-                        .append('<span class="exit-hint" title="Close">&times;</span>')
-                        .find('span.exit-hint')
+                    var skillTipsExit =
+                        $('<span class="exit-hint" title="Close">&times;</span>')
                         .click(function (obj) {
                             var hoverHintEl = $(obj.target).closest('div.hover-hint-container');
                             if ($(hoverHintEl).css('display') != 'none') {
@@ -109,6 +95,23 @@ function addHintsIndicator() {
                                 return false;
                             }
                         });
+
+                    var skillTipsText =
+                        $('<div class="hover-hint-container"><div class="hover-hint-text">{notes}</div></div>'.format({notes: skill.tipsAndNotes}))
+                        .hide()
+                        .append(skillTipsExit);
+
+                    var skillTipsIcon =
+                        $('<div class="hover-hint" id="hints-indicator">&#128712;</div>')
+                        .click(function (obj) {
+                            var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-container');
+                            var hintVisible = $(hoverHintEl).css('display');
+                            if (hintVisible == 'none') {
+                                $(hoverHintEl).fadeIn(500);
+                            }
+                        }).append(skillTipsText);
+
+                    $(skillHtml).append(skillTipsIcon);
                 }
             }
         });
