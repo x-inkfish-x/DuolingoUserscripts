@@ -288,9 +288,9 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 String.prototype.format = function (args) {
     a = this;
 
-    for (k in Object.keys(args)) {
+    Object.keys(args).forEach(function(k){
         a = a.replace("{" + k + "}", args[k]);
-    }
+    });
 
     return a;
 }
