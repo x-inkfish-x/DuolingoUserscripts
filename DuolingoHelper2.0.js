@@ -247,10 +247,10 @@ DuolingoHelper.prototype.getSkillFields = function () {
     var els = document.getElementsByClassName(skillFieldId);
 
     if (els.length == 0) {
-        els = document.getElementsByClassName("Af4up");
+        var linkEls = document.getElementsByClassName("Af4up");
 
-        if (els.length > 0) {
-            var asArr = Array.from(els);
+        if (linkEls.length > 0) {
+            var asArr = Array.from(linkEls);
             asArr.forEach(function (el) {
                 var wrapper = document.createElement('div');
                 wrapper.setAttribute('class', 'Af4up ' + skillFieldId);
@@ -260,6 +260,8 @@ DuolingoHelper.prototype.getSkillFields = function () {
 
             return document.getElementsByClassName(skillFieldId)
         }
+
+        return undefined;
     }
 
     return els;
