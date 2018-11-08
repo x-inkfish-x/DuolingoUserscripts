@@ -4,7 +4,7 @@
 // @version      1.0.2
 // @description  A Duolingo userscripts that adds an indicator to skills with tips and notes
 // @author       Legato né Mikael
-// @match        https://www.duolingo.com/
+// @match        https://www.duolingo.com/*
 // @run-at       document-start
 // @grant        GM_addStyle
 
@@ -20,8 +20,12 @@
 
 var hintCss = `
 .hover-hint{
-    color: gold;
     font-size: 3em;
+}
+
+.hover-hint .icon{
+    cursor: pointer;  
+    color: gold;
     position: absolute;
     top:0;
     left:0;
@@ -102,16 +106,18 @@ function addHintsIndicator() {
                         }))
                         .hide()
                         .append(skillTipsExit);
-
+                    
+                    var skillTipsIcon = $('<span class="icon">&#128712;</span>');
+                    
                     var skillTipsIcon =
-                        $('<div class="hover-hint" id="hints-indicator">&#128712;</div>')
+                        $('<div class="hover-hint" id="hints-indicator"></div>')
                         .click(function (obj) {
                             var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-container');
                             var hintVisible = $(hoverHintEl).css('display');
                             if (hintVisible == 'none') {
                                 $(hoverHintEl).fadeIn(500);
                             }
-                        }).append(skillTipsText);
+                        }).append(skillTipsIcon).append(skillTipsText);
 
                     $(skillHtml).append(skillTipsIcon);
                 }
