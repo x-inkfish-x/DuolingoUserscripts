@@ -93,7 +93,7 @@ DuolingoHelper.prototype.makeGetRequest = function (args) {
             if (xhr.readyState == 4) {
                 args.success(res);
             }
-        } else {
+        } else if (xhr.status != 0) {
             if (args.error) {
                 args.error();
             }
