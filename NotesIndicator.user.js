@@ -49,6 +49,7 @@ var hintCss = `
    z-index: 100;
    opacity: 0;
    transition: opacity 1s;
+   line-height: 1.2em;
 
    border-style: solid;
    border-color: #555;
