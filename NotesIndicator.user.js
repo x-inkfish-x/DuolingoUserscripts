@@ -35,7 +35,7 @@ var hintCss = `
    
    width: 60%;
    max-height: 85%;
-   overflow-y: scroll;
+   overflow-y: auto;
    font-size: 0.5em;
 
    visibility: hidden;
