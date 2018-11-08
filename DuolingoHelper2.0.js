@@ -289,7 +289,7 @@ String.prototype.format = function (args) {
     a = this;
 
     for (k in Object.keys(args)) {
-        a = a.replace("{" + k + "}", arguments[k]);
+        a = a.replace("{" + k + "}", args[k]);
     }
 
     return a;
