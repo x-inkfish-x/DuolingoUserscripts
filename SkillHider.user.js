@@ -17,10 +17,57 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
-var helper = new DuolingoHelper();
+var helper = new DuolingoHelper({
+    onPageUpdate: addSkillButton
+});
+
 var hiderId = 'skill-hider';
 var maxSkillStrength = 4;
 var maxStrengthToShow = maxSkillStrength;
+var filteredSkills;
+var trimButton;
+
+// ---------------------------------------------------------------------------------------------------------
+
+function hasClearedSkills(skills) {
+    return skills.filter(skill => skill.finishedLevels > 0).length > 0;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function setButtonText(skills) {
+    var maxSkillFraction = maxStrengthToShow / maxSkillStrength;
+    var shouldTrim = hasClearedSkills(filteredSkills);
+
+    if (shouldTrim && !isMinStrengthLessThanMaxShown(skills)) {
+        $(trimButton).text("Trim");
+    } else {
+        $(trimButton).text("Grow");
+    }
+}
+
+function trim() {
+    var skills = helper.getLocalCurrentSkills();
+    calculateMaxStrength(skills);
+    helper.forEachSkill({
+        skills: skills,
+        func: hideSkills
+    });
+    setButtonText(skills);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function addSkillButton() {
+    filteredSkills = helper.getLocalCurrentSkills();
+    if ($('div#' + hiderId).length == 0) {
+        trimButton = $('<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{0}"><span>Trim</span></div>'.format(hiderId));
+        trimButton.hide();
+        trimButton.click(trim);
+        $('div.mAsUf').prepend(trimButton);
+        trimButton.fadeIn(750);
+    }
+}
 
 // ---------------------------------------------------------------------------------------------------------
 
@@ -35,7 +82,7 @@ function hideSkills(skill, skillElement) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-function calculateMaxStrength(skills) {
+function isMinStrengthLessThanMaxShown(skills) {
     var minSkillStrength = 1;
 
     skills.forEach(function (skill) {
@@ -44,33 +91,26 @@ function calculateMaxStrength(skills) {
         }
     });
 
-    maxStrengthToShow--;
-
-    if (minSkillStrength * maxSkillStrength > maxStrengthToShow) {
-        maxStrengthToShow = maxSkillStrength;
-    }
+    return minSkillStrength * maxSkillStrength > maxStrengthToShow;
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
-$(function () {
-    if ($('div#' + hiderId).length == 0) {
-        $('div.mAsUf').prepend(
-            '<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{0}"><span>Hide</span></div>'.format(hiderId)
-        );
+function calculateMaxStrength(skills) {
+    maxStrengthToShow--;
+
+    if (isMinStrengthLessThanMaxShown(skills) || !hasClearedSkills(filteredSkills)) {
+        filteredSkills = helper.getLocalCurrentSkills();
+        maxStrengthToShow = maxSkillStrength;
     }
-});
+
+    var maxSkillFraction = maxStrengthToShow / maxSkillStrength;
+    filteredSkills = filteredSkills.filter(skill => skill.strength <= maxSkillFraction && skill.accessible);
+}
 
 // ---------------------------------------------------------------------------------------------------------
 
-$('body').on('click', '#' + hiderId, function () {
-    var skills = helper.getLocalCurrentSkills();
-    calculateMaxStrength(skills);
-    helper.forEachSkill({
-        skills: skills,
-        func: hideSkills
-    });
-});
+$(addSkillButton);
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
