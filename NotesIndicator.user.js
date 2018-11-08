@@ -97,7 +97,9 @@ function addHintsIndicator() {
                         });
 
                     var skillTipsText =
-                        $('<div class="hover-hint-container"><div class="hover-hint-text">{notes}</div></div>'.format({notes: skill.tipsAndNotes}))
+                        $('<div class="hover-hint-container"><div class="hover-hint-text">{notes}</div></div>'.format({
+                            notes: skill.tipsAndNotes
+                        }))
                         .hide()
                         .append(skillTipsExit);
 

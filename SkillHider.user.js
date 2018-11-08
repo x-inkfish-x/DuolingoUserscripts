@@ -61,7 +61,7 @@ function trim() {
 function addSkillButton() {
     filteredSkills = helper.getLocalCurrentSkills();
     if ($('div#' + hiderId).length == 0) {
-        trimButton = $('<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{0}"><span>Trim</span></div>'
+        trimButton = $('<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{id}" style="margin-left: 0.5em;"><span>Trim</span></div>'
             .format({
                 id:hiderId
             }));
