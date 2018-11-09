@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tips and Notes Indicator
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.1.0
+// @version      1.1.1
 // @description  A Duolingo userscripts that adds an indicator to skills with tips and notes
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -82,7 +82,7 @@ var helper = new DuolingoHelper({
 });
 
 function addHintsIndicator() {
-    if ($("#hints-indicator").length == 0) {
+    if ( helper.isMainPage() && $("#hints-indicator").length == 0) {
         var skills = helper.getLocalCurrentSkills();
 
         helper.forEachSkill({
