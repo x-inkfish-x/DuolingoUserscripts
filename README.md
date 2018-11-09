@@ -30,3 +30,13 @@ Another thing that we had once upon a time, but was removed, was the ability to 
 
 ![Words?](https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/Screenshots/VocabularyViewer1.png)
 ![Words!](https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/Screenshots/VocabularyViewer2.png)
+
+## [Postscript](#postscript)
+If you have come this far, thank you for reading about my scripts! I hope you found at least one that interests you. It's been a really interesting learning experience writing these, and I've personally found a lot of use for all of them. 
+
+I'll do my best to maintain these in the future, but my hope is that they will work with minimal maintenance as long as DuolingoHelper is kept up to date. 
+
+If you have any suggestions for how to improme my scripts, or some other scripts to add, please don't hesitate to give me a shout! (although, if you are a developer/curious about JavaScript, I would encourage you to write your own)
+
+Regards,
+Legato né Mikael
