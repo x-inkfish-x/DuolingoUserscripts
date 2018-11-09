@@ -39,4 +39,5 @@ I'll do my best to maintain these in the future, but my hope is that they will w
 If you have any suggestions for how to improme my scripts, or some other scripts to add, please don't hesitate to give me a shout! (although, if you are a developer/curious about JavaScript, I would encourage you to write your own)
 
 Regards,
+
 Legato né Mikael
