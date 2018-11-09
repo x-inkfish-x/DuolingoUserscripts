@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.3.0
+// @version      1.3.1
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -112,21 +112,29 @@ var css = `
     border-radius: 50%;
     width: 2em;
     height: 2em;
-    animation: spin 1.75s linear infinite, bob 1.75s linear infinite;
+    animation: spin 1.75s linear infinite, bob 1s linear infinite;
     margin-top 2em;
     margin-left: auto;
     margin-right: auto;
 }
 
 @keyframes spin{
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg) scale(0.8); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(0.8); }
 }
 
 @keyframes bob{
-    0% { border-top: 0.3em solid #0048ba; }
-    50% { border-top: 0.6em solid #0048ba; }
-    100% { border-top: 0.3em solid #0048ba; }
+    0% {
+        border: 0.4em solid #8ca5cc;
+        border-top: 0.3em solid #0048ba; }
+    50% {
+        border: 0.2em solid #8ca5cc;
+        border-top: 0.6em solid #0048ba; }
+    100% {
+        border: 0.4em solid #8ca5cc;
+        border-top: 0.3em solid #0048ba;
+    }
 }
 `;
 
