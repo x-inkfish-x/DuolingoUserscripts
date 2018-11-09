@@ -1,6 +1,8 @@
-# Userscripts
+# [Userscripts](#userscripts)
 
-Just a few userscripts I made to test the capabilities of the DuolingoHelper that I made (also for my own enjoyment and because I find them useful). Hopefully this will encourage others to create useful userscripts!
+Just a few userscripts I made to test the capabilities of the DuolingoHelper that I made (also for my own enjoyment and because I find them useful). The scripts are even designed to work together! Hopefully this will encourage others to create useful userscripts!
+
+![All together!](https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/Screenshots/AllScripts.png)
 
 ## [Notes Indicator](#notes-indicator)
 ### [Install](https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/NotesIndicator.user.js)
