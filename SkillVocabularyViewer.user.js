@@ -1,18 +1,18 @@
 // ==UserScript==
-// @name         Skill Vocabulary Viewer Beta
+// @name         Skill Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.0
+// @version      1.1.1
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
 // @run-at       document-start
 // @grant        GM_addStyle
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
@@ -215,23 +215,25 @@ function addVocabButton(skillElement, vocab) {
 }
 
 function addVocabButtons() {
-    helper.requestVocabulary({
-        success: function (vocab) {
-            if (vocab) {
-                var skills = helper.getLocalCurrentSkills();
-                helper.forEachSkill({
-                    skills: skills,
-                    func: function (skill, skillField) {
-                        var filteredVocab = vocab.vocab_overview.filter(v => skill.urlName == v.skill_url_title);
+    if (helper.isMainPage()) {
+        helper.requestVocabulary({
+            success: function (vocab) {
+                if (vocab) {
+                    var skills = helper.getLocalCurrentSkills();
+                    helper.forEachSkill({
+                        skills: skills,
+                        func: function (skill, skillField) {
+                            var filteredVocab = vocab.vocab_overview.filter(v => skill.urlName == v.skill_url_title);
 
-                        if (filteredVocab.length > 0) {
-                            addVocabButton(skillField, filteredVocab);
+                            if (filteredVocab.length > 0) {
+                                addVocabButton(skillField, filteredVocab);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
-        }
-    })
+        })
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------

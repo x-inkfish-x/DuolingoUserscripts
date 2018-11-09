@@ -1,17 +1,17 @@
 // ==UserScript==
-// @name         Skill Hider Beta
+// @name         Skill Hider
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.14
+// @version      1.1.1
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
 // @run-at       document-start
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillHider.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillHider.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillHider.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillHider.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
@@ -59,17 +59,19 @@ function trim() {
 // ---------------------------------------------------------------------------------------------------------
 
 function addSkillButton() {
-    filteredSkills = helper.getLocalCurrentSkills();
-    if ($('div#' + hiderId).length == 0) {
-        trimButton = $('<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{id}" style="margin-left: 0.5em;"><span>Trim</span></div>'
-            .format({
-                id:hiderId
-            }));
+    if (helper.isMainPage()) {
+        filteredSkills = helper.getLocalCurrentSkills();
+        if ($('div#' + hiderId).length == 0) {
+            trimButton = $('<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{id}" style="margin-left: 0.5em;"><span>Trim</span></div>'
+                .format({
+                    id: hiderId
+                }));
 
-        trimButton.hide();
-        trimButton.click(trim);
-        $('div.mAsUf').prepend(trimButton);
-        trimButton.fadeIn(750);
+            trimButton.hide();
+            trimButton.click(trim);
+            $('div.mAsUf').prepend(trimButton);
+            trimButton.fadeIn(750);
+        }
     }
 }
 
