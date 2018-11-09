@@ -1,18 +1,18 @@
 // ==UserScript==
-// @name         Skill Vocabulary Viewer
+// @name         Skill Vocabulary Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.1.1
+// @version      1.2.1
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
 // @run-at       document-start
 // @grant        GM_addStyle
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
@@ -38,7 +38,7 @@ var css = `
     width: 20em;
     height: 85%;
 
-    padding-top: 1em;
+    padding-top: 1.1em;
     padding-bottom: 1em;
 
     border-style: solid;
@@ -47,7 +47,7 @@ var css = `
 
     z-index: 100;
 
-    background-color: #dddddd;
+    background-color: #d8d8d8;
 }
 
 .skill-vocab .container .text{
@@ -64,6 +64,8 @@ var css = `
 
     max-height: 100%;
     max-width: 100%;
+
+    cursor: default;
 }
 
 .skill-vocab .close{
@@ -75,15 +77,24 @@ var css = `
 }
 
 .skill-vocab .dictionary{
+    margin-bottom: 1em;
     position: relative;
     width: 100%;
 }
 
-.skill-vocab .dictionary .word{
-    width: 50%;
+.skill-vocab .dictionary tr{
+    background-color: #dddddd;
 }
 
-.skill-vocab .dictionary .definition{
+.skill-vocab .dictionary tr:nth-child(odd){
+    background-color: #cccccc;
+}
+
+.skill-vocab .dictionary .word{
+    min-width: 13em;
+}
+
+.skill-vocab .dictionary .translations{
     width: 100%;
     margin: 2em;
 }
@@ -95,7 +106,30 @@ var css = `
 .skill-vocab .dictionary a:visited{
     color: #534;
 }
-`;;
+
+.skill-vocab .loader {
+    border: 0.2em solid #8ca5cc;
+    border-top: 0.5em solid #0048ba;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    animation: spin 1.75s linear infinite, bob 1.75s linear infinite;
+    margin-top 2em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes spin{
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes bob{
+    0% { border-top: 0.3em solid #0048ba; }
+    50% { border-top: 0.6em solid #0048ba; }
+    100% { border-top: 0.3em solid #0048ba; }
+}
+`;
 
 // ---------------------------------------------------------------------------------------------------------
 
@@ -106,13 +140,13 @@ var helper = new DuolingoHelper({
 // ---------------------------------------------------------------------------------------------------------
 
 function addDefinition(element, def) {
-    var defLine = $('<div class="dictionary" id="{id}"><a href="{path}" class="word" target="_blank">{word}</a><span class="definition">{translation}</span></div>'.format({
+    var defLine = $('<tr><td class="word"><a href="{path}" target="_blank">{word}</a></td><td class="translations">{translation}</td></tr>'.format({
         word: def.word,
         translation: def.translations,
-        path: def.canonical_path,
-        id: def.lexeme_id
+        path: def.canonical_path
     })).hide();
-    $(element).append(defLine);
+    var defTable = $(element).find('table.dictionary');
+    defTable.append(defLine);
     defLine.fadeIn(500);
 }
 
@@ -122,6 +156,18 @@ function addError(element, vocab) {
     $(element).append("<div>Failed to get dictionary definition for {v}</div>".format({
         v: vocab.word_string
     }));
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+
+function doNextVocab(text, vocab, i) {
+    i = i + 1;
+    if (i < vocab.length) {
+        populateSingleWord(text, vocab, i);
+    } else {
+        $(text).find('.loader').fadeOut(500);
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -136,41 +182,30 @@ function populateSingleWord(text, vocab, i) {
                 addDefinition(text, obj);
             }
 
-            if (i < vocab.length) {
-                populateSingleWord(text, vocab, i + 1);
-            }
+            doNextVocab(text, vocab, i);
         },
         error: function () {
             addError(text, v);
-            if (i < vocab.length) {
-                populateSingleWord(text, vocab, i + 1);
-            }
+            doNextVocab(text, vocab, i);
         }
     });
 }
 
+// ---------------------------------------------------------------------------------------------------------
+
 function populateContainer(element, vocab) {
     if (vocab.length > 0) {
-        var text = $(element).find('div.container .text');
+        var container = $(element).find('div.container');
+        $(container).find('.loader').show();
+        var text = $(container).find('.text');
+
         $(text).empty();
+        var table = $('<table class="dictionary"></table>');
+        $(text).append(table);
+        $(text).append('<div class="loader"></div>');
 
         populateSingleWord(text, vocab, 0);
     }
-
-
-    //     vocab.forEach(function (v) {
-    //         helper.requestDictionaryDefinition({
-    //             lexemeId: v.lexeme_id,
-    //             success: function (obj) {
-    //                 if (obj) {
-    //                     addDefinition(text, obj);
-    //                 }
-    //             },
-    //             error: function () {
-    //                 addError(text, v);
-    //             }
-    //         });
-    //     });
 }
 
 function showContainer(element) {
@@ -191,11 +226,15 @@ function addVocabButton(skillElement, vocab) {
                 }
             });
 
-        var button = $('<span class="icon">&#x24cc;</span>');
 
-        var container = $('<div class="container"><div class="text">eououououe</div></div>')
+        var text = $('<div class="text"></div>');
+
+        var container = $('<div class="container"></div>')
             .hide()
-            .append(exit);
+            .append(text)
+            .append(exit)
+
+        var button = $('<span class="icon">&#x24cc;</span>');
 
         var skill = $('<div class="skill-vocab"></div>')
             .click(function (obj) {
@@ -213,6 +252,8 @@ function addVocabButton(skillElement, vocab) {
         $(skillElement).append(skill);
     }
 }
+
+// ---------------------------------------------------------------------------------------------------------
 
 function addVocabButtons() {
     if (helper.isMainPage()) {
