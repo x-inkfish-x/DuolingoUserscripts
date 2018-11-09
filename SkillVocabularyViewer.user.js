@@ -38,7 +38,7 @@ var css = `
     width: 20em;
     height: 85%;
 
-    padding-top: 1em;
+    padding-top: 1.1em;
     padding-bottom: 1em;
 
     border-style: solid;
@@ -47,7 +47,7 @@ var css = `
 
     z-index: 100;
 
-    background-color: #dddddd;
+    background-color: #d8d8d8;
 }
 
 .skill-vocab .container .text{
@@ -64,6 +64,8 @@ var css = `
 
     max-height: 100%;
     max-width: 100%;
+
+    cursor: default;
 }
 
 .skill-vocab .close{
@@ -75,8 +77,13 @@ var css = `
 }
 
 .skill-vocab .dictionary{
+    margin-bottom: 1em;
     position: relative;
     width: 100%;
+}
+
+.skill-vocab .dictionary tr{
+    background-color: #dddddd;
 }
 
 .skill-vocab .dictionary tr:nth-child(odd){
@@ -84,7 +91,7 @@ var css = `
 }
 
 .skill-vocab .dictionary .word{
-    min-width: 10em;
+    min-width: 13em;
 }
 
 .skill-vocab .dictionary .translations{
