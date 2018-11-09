@@ -47,7 +47,7 @@ function setButtonText(skills) {
 
 function trim() {
     var skills = helper.getLocalCurrentSkills();
-    calculateMaxStrength(skills);
+    calculateMaxStrengthToShow(skills);
     helper.forEachSkill({
         skills: skills,
         func: hideSkills
@@ -87,7 +87,7 @@ function hideSkills(skill, skillElement) {
 
 // ---------------------------------------------------------------------------------------------------------
 
-function isMinStrengthLessThanMaxShown(skills) {
+function calculateMinStrength(skills){
     var minSkillStrength = 1;
 
     skills.forEach(function (skill) {
@@ -96,12 +96,32 @@ function isMinStrengthLessThanMaxShown(skills) {
         }
     });
 
-    return minSkillStrength * maxSkillStrength > maxStrengthToShow;
+    return minSkillStrength;
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
-function calculateMaxStrength(skills) {
+function calculateMaxStrength(skills){
+    var maxSkillStrength = 0;
+
+    skills.forEach(function (skill) {
+        if (maxSkillStrength < skill.strength) {
+            maxSkillStrength = skill.strength;
+        }
+    });
+
+    return maxSkillStrength;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function isMinStrengthLessThanMaxShown(skills) {
+    return calculateMinStrength(skills) * maxSkillStrength > maxStrengthToShow;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function calculateMaxStrengthToShow(skills) {
     maxStrengthToShow--;
 
     if (isMinStrengthLessThanMaxShown(skills) || !hasClearedSkills(filteredSkills)) {
@@ -111,6 +131,7 @@ function calculateMaxStrength(skills) {
 
     var maxSkillFraction = maxStrengthToShow / maxSkillStrength;
     filteredSkills = filteredSkills.filter(skill => skill.strength <= maxSkillFraction && skill.accessible);
+    maxStrengthToShow = calculateMaxStrength(filteredSkills) * maxSkillStrength;
 }
 
 // ---------------------------------------------------------------------------------------------------------
