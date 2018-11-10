@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Language Level Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.0
+// @version      1.0.1
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -27,6 +27,7 @@ var css = `
 .language-level{
     margin-left: auto;
     margin-right: auto;
+    cursor: default;
 }
 
 .language-level .level{
