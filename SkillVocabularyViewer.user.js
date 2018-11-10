@@ -144,6 +144,8 @@ var helper = new DuolingoHelper({
     onPageUpdate: addVocabButtons
 });
 
+var container;
+
 // ---------------------------------------------------------------------------------------------------------
 
 function addDefinition(element, def) {
@@ -170,7 +172,7 @@ function addError(element, vocab) {
 
 function doNextVocab(text, vocab, i) {
     i = i + 1;
-    if (i < vocab.length) {
+    if (i < vocab.length && $(container).css('display') != 'none') {
         populateSingleWord(text, vocab, i);
     } else {
         $(text).find('.loader').fadeOut(500);
@@ -202,7 +204,6 @@ function populateSingleWord(text, vocab, i) {
 
 function populateContainer(element, vocab) {
     if (vocab.length > 0) {
-        var container = $(element).find('div.container');
         $(container).find('.loader').show();
         var text = $(container).find('.text');
 
@@ -223,30 +224,11 @@ function showContainer(element) {
 
 function addVocabButton(skillElement, vocab) {
     if ($(skillElement).find('div.skill-vocab').length == 0) {
-        var exit = $('<span class="close" title="Close">&times;</span>')
-            .click(function (obj) {
-                var container = $(obj.target).closest('div.container');
-                if ($(container).css('display') != 'none') {
-                    obj.stopPropagation();
-                    $(container).fadeOut(500);
-                    return false;
-                }
-            });
-
-
-        var text = $('<div class="text"></div>');
-
-        var container = $('<div class="container"></div>')
-            .hide()
-            .append(text)
-            .append(exit)
 
         var button = $('<span class="icon">&#x24cc;</span>');
 
         var skill = $('<div class="skill-vocab"></div>')
             .click(function (obj) {
-
-                var container = $(obj.currentTarget).find('div.container');
                 var containerVisible = $(container).css('display');
                 if (containerVisible == 'none') {
                     populateContainer(obj.currentTarget, vocab);
@@ -254,7 +236,7 @@ function addVocabButton(skillElement, vocab) {
                 }
             });
 
-        $(skill).append(container);
+
         $(skill).append(button);
         $(skillElement).append(skill);
     }
@@ -267,6 +249,32 @@ function addVocabButtons() {
         helper.requestVocabulary({
             success: function (vocab) {
                 if (vocab) {
+                    var vocabFieldTarget = $('div.i12-l');
+
+                    if ($(vocabFieldTarget.find('div.skill-vocab')).length == 0) {
+                        var exit = $('<span class="close" title="Close">&times;</span>')
+                            .click(function (obj) {
+                                container = $(obj.target).closest('div.container');
+                                if ($(container).css('display') != 'none') {
+                                    obj.stopPropagation();
+                                    $(container).fadeOut(500);
+                                    return false;
+                                }
+                            });
+
+
+                        var text = $('<div class="text"></div>');
+
+                        container = $('<div class="container"></div>')
+                            .hide()
+                            .append(text)
+                            .append(exit)
+
+                        var vocabField = $('<div class="skill-vocab"></div>').append(container);
+
+                        vocabFieldTarget.append(vocabField);
+                    }
+
                     var skills = helper.getLocalCurrentSkills();
                     helper.forEachSkill({
                         skills: skills,
