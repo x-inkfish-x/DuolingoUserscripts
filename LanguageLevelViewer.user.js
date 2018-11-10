@@ -17,45 +17,65 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
-var helper = new DuolingoHelper({
-    onPageUpdate: addLanguageLevel
-});
-
-// ---------------------------------------------------------------------------------------------------------
-
 var css = `
 .language-level{
-    margin-left: auto;
-    margin-right: auto;
+    line-height: 3em;
     cursor: default;
 }
 
+.language-level .circle{
+    margin-left: auto;
+    margin-right: auto;
+    border-style: solid;
+    width: 4em;
+    height: 4em;
+    border-radius: 2em;
+}
+
 .language-level .level{
-    margin: 0.2em;
+    text-align: center;
+    transform: translateY(0.15em);
     font-size: 2em;
 }
 `;
 
+var helper = new DuolingoHelper({
+    onPageUpdate: setLanguageLevel
+});
+
+var levelTextField;
+
 // ---------------------------------------------------------------------------------------------------------
 
-function addLanguageLevel() {
-    var levelParentField = $('div.aFqnr._1E3L7')
-    if ($(levelParentField).find('.language-level').length == 0) {
-        GM_addStyle(css);
-        var cutoffs = helper.getLocalState().config.xpLevelCutoffs;
-        var currentCourse = helper.getCurrentCourse();
-        var currentLevel = 25 - cutoffs.filter(c => c > currentCourse.xp).length;
-
-        $(levelParentField).prepend('<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI language-level"><div class="level">Lvl. {level}</div></div>'.format({
-            level: currentLevel
-        }));
-    }
-
+function getLanguageLevel() {
+    var cutoffs = helper.getLocalState().config.xpLevelCutoffs;
+    var currentCourse = helper.getCurrentCourse();
+    return 25 - cutoffs.filter(c => c > currentCourse.xp).length;
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
-$(addLanguageLevel);
+function setLanguageLevel() {
+    if ($('div.language-level').length == 0) {
+        GM_addStyle(css);
+        var levelParentField = $('div.aFqnr._1E3L7')
+
+        levelTextField = $('<div class="level">{level}</div>');
+        var levelCircle = $('<div class="circle"></div>')
+            .append(levelTextField);
+        var levelTitle = $('<h2>Language Level</h2>');
+        var levelBox = $('<div class="aFqnr _1E3L7 language-level"></div>')
+            .append(levelTitle)
+            .append(levelCircle);
+        $(levelParentField).before(levelBox);
+    }
+
+    levelTextField.text(getLanguageLevel);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+$(setLanguageLevel);
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
