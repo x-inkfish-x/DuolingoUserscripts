@@ -83,6 +83,8 @@ var css = `
 }
 
 .skill-vocab .dictionary tr{
+    display: block;
+    border-radius: 1em;
     background-color: #dddddd;
 }
 
@@ -91,6 +93,7 @@ var css = `
 }
 
 .skill-vocab .dictionary .word{
+    padding-left: 1.5em;
     min-width: 13em;
 }
 
