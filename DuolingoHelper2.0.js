@@ -160,6 +160,20 @@ DuolingoHelper.prototype.getLocalCurrentSkills = function () {
 
 // ---------------------------------------------------------------------------------------------------------
 
+DuolingoHelper.prototype.getCurrentCourse = function () {
+    var state = this.getLocalState();
+
+    if (state) {
+        var courseArray = Object.values(state.courses);
+
+        return courseArray.find(c => c.learningLanguage == state.user.learningLanguage && c.fromLanguage == state.user.fromLanguage);
+    }
+
+    return undefined;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 DuolingoHelper.prototype.getLocalUser = function () {
     var state = this.getLocalState();
 
@@ -208,7 +222,7 @@ DuolingoHelper.prototype.mapSkillElementsToId = function (skillArray) {
 
     if (skillArray) {
         for (var i = 0; i < skillArray.length; ++i) {
-            
+
             var skill = this.getSkillForElement(skillArray[i]);
 
             if (!skill) continue;
@@ -244,12 +258,12 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.prototype.getSkillForElement = function (element) {
-    if(element){
+    if (element) {
         var el = $(element).find('div._2albn');
         if (el.length > 0) {
             var reactElement = this.findReactElement(el[0]);
 
-            if(reactElement.children.length > 0){
+            if (reactElement.children.length > 0) {
                 return reactElement.children[0].props.skill;
             }
         }
