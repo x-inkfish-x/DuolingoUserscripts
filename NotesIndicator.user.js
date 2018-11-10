@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tips and Notes Indicator
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.3.0
+// @version      1.3.1
 // @description  A Duolingo userscripts that adds an indicator to skills with tips and notes
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -11,7 +11,7 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/NotesIndicator.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
@@ -30,7 +30,7 @@ var hintCss = `
     left:0;
 }
 
-.hover-hint .hover-hint-container{
+.hover-hint .container{
     position: fixed;
     top: 50%;
     left: 50%;
@@ -51,7 +51,7 @@ var hintCss = `
     background-color: #dddddd;
 }
 
-.hover-hint-container .hover-hint-text{
+.hover-hint .container .text{
     overflow-y: auto;
     font-size: 0.5em;
 
@@ -67,7 +67,7 @@ var hintCss = `
     max-width: 100%;
 }
 
-.exit-hint{
+.exit{
     position: absolute;
     top: 0.45em;
     left: 0.42em;
@@ -80,45 +80,73 @@ var helper = new DuolingoHelper({
     onPageUpdate: addHintsIndicator
 });
 
+var container;
+
+// ---------------------------------------------------------------------------------------------------------
+
+function makeHintContainer() {
+    var hintFieldTarget = $('div#root');
+
+    if ($(hintFieldTarget.find('div.hover-hint')).length == 0) {
+        var exit =
+            $('<span class="exit" title="Close">&times;</span>')
+            .click(function (obj) {
+                var hoverHintEl = $(obj.target).closest('div.container');
+                if ($(hoverHintEl).css('display') != 'none') {
+                    obj.stopPropagation();
+                    $(hoverHintEl).fadeOut(500);
+                    return false;
+                }
+            });
+        var text = $('<div class="text"></div>')
+        container = $('<div class="container"></div>')
+            .append(text)
+            .append(exit)
+            .hide();
+
+        var hintField = $('<div class="hover-hint"></div>').append(container);
+        $(hintFieldTarget).append(hintField);
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function addHintButton(element){
+    if($(element).find('hover-hint').length == 0)
+    {
+        var skillTipsIcon = $('<span class="icon">&#128712;</span>');
+
+        var skillTips =
+            $('<div class="hover-hint"></div>')
+            .click(function (obj) {
+                var hintVisible = $(container).css('display');
+                if (hintVisible == 'none') {
+                    var text = $(container).find('.text');
+                    var skill = helper.getSkillForElement(element);
+                    if(skill){
+                        $(text).html(skill.tipsAndNotes);
+                        $(container).fadeIn(500);
+                    }
+                }
+            }).append(skillTipsIcon);
+    
+        $(element).append(skillTips);
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 function addHintsIndicator() {
-    if ( helper.isMainPage() && $("#hints-indicator").length == 0) {
+    if (helper.isMainPage() && $(".hover-hint").length == 0) {
+        makeHintContainer();
+
         var skills = helper.getLocalCurrentSkills();
 
         helper.forEachSkill({
             skills: skills,
             func: function (skill, skillHtml) {
                 if (skill.tipsAndNotes) {
-                    var skillTipsExit =
-                        $('<span class="exit-hint" title="Close">&times;</span>')
-                        .click(function (obj) {
-                            var hoverHintEl = $(obj.target).closest('div.hover-hint-container');
-                            if ($(hoverHintEl).css('display') != 'none') {
-                                obj.stopPropagation();
-                                $(hoverHintEl).fadeOut(500);
-                                return false;
-                            }
-                        });
-
-                    var skillTipsText =
-                        $('<div class="hover-hint-container"><div class="hover-hint-text">{notes}</div></div>'.format({
-                            notes: skill.tipsAndNotes
-                        }))
-                        .hide()
-                        .append(skillTipsExit);
-                    
-                    var skillTipsIcon = $('<span class="icon">&#128712;</span>');
-                    
-                    var skillTipsIcon =
-                        $('<div class="hover-hint" id="hints-indicator"></div>')
-                        .click(function (obj) {
-                            var hoverHintEl = $(obj.currentTarget).find('div.hover-hint-container');
-                            var hintVisible = $(hoverHintEl).css('display');
-                            if (hintVisible == 'none') {
-                                $(hoverHintEl).fadeIn(500);
-                            }
-                        }).append(skillTipsIcon).append(skillTipsText);
-
-                    $(skillHtml).append(skillTipsIcon);
+                    addHintButton(skillHtml);
                 }
             }
         });
