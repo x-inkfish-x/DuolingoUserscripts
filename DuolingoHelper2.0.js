@@ -197,6 +197,14 @@ DuolingoHelper.prototype.getUserId = function () {
 }
 
 // ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.getCurrentLanguageLevel = function () {
+    var cutoffs = this.getLocalState().config.xpLevelCutoffs;
+    var currentCourse = this.getCurrentCourse();
+    return 25 - cutoffs.filter(c => c > currentCourse.xp).length;
+}
+
+// ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 
