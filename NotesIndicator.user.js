@@ -22,6 +22,20 @@ var hintCss = `
     font-size: 3em;
 }
 
+.hover-hint h1{
+    margin-left: -0.5em;
+    margin-top: 1em;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.hover-hint h2{
+    margin-left: -0.5em;
+    margin-top: 1em;
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
 .hover-hint h3{
     margin-left: -0.5em;
     margin-top: 1em;
@@ -97,17 +111,17 @@ function makeHintContainer() {
 
     var exit =
         $('<span class="exit" title="Close">&times;</span>')
-    .click(function (obj) {
-        var hoverHintEl = $(obj.target).closest('div.container');
-        if ($(hoverHintEl).css('display') != 'none') {
-            obj.stopPropagation();
-            $(hoverHintEl).fadeOut(500, function(){
-                $(container).parent().remove();
-                container = undefined;
-            });
-            return false;
-        }
-    });
+        .click(function (obj) {
+            var hoverHintEl = $(obj.target).closest('div.container');
+            if ($(hoverHintEl).css('display') != 'none') {
+                obj.stopPropagation();
+                $(hoverHintEl).fadeOut(500, function () {
+                    $(container).parent().remove();
+                    container = undefined;
+                });
+                return false;
+            }
+        });
     var text = $('<div class="text"></div>')
     container = $('<div class="container"></div>')
         .append(text)
@@ -120,9 +134,8 @@ function makeHintContainer() {
 
 // ---------------------------------------------------------------------------------------------------------
 
-function addHintButton(element){
-    if($(element).find('hover-hint').length == 0)
-    {
+function addHintButton(element) {
+    if ($(element).find('hover-hint').length == 0) {
         var skillTipsIcon = $('<span class="icon">&#128712;</span>');
 
         var skillTips =
@@ -133,13 +146,13 @@ function addHintButton(element){
                     makeHintContainer();
                     var text = $(container).find('.text');
                     var skill = helper.getSkillForElement(element);
-                    if(skill){
+                    if (skill) {
                         $(text).html(skill.tipsAndNotes);
                         $(container).fadeIn(500);
                     }
                 }
             }).append(skillTipsIcon);
-    
+
         $(element).append(skillTips);
     }
 }
