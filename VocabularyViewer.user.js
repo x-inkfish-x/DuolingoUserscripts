@@ -5,21 +5,129 @@
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
-// @run-at       document-start
+
+// @grant        GM_addStyle
 
 // @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/VocabularyViewer.user.js
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/VocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/master/DataHelper1.0.js
+// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/master/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
 // ---------------------------------------------------------------------------------------------------------
 
+var helper = new DuolingoHelper({
+    onPageUpdate: function (mutations) {
+        helper.requestVocabulary({
+            success: addVocabulary
+        });
+    }
+});
+
+var css = `
+.vocabulary-viewer{
+    
+}
+
+.vocabulary-viewer .container{
+    height: 50em;
+    overflow-y: auto;
+}
+
+.vocabulary-viewer table{
+    width: 100%;
+}
+
+.vocabulary-viewer a{
+    color: #534;
+}
+
+.vocabulary-viewer a:visited{
+    color: #534;
+}
+
+.vocabulary-viewer tr .word{
+    min-width: 12em;
+}
+
+.vocabulary-viewer tr{
+    display: block;
+    border-radius: 2em;
+    background-color: #dddddd;
+}
+
+.vocabulary-viewer tr:nth-child(odd){
+    background-color: #cccccc;
+}
+`;
+
+var vocabTable;
+var title;
+// ---------------------------------------------------------------------------------------------------------
+
+function makeVocabEntry(vocab, v) {
+    var vocabField = $('<td class="word"><a href="/dictionary/{lang}/{normstr}/{id}" target="_blank">{str}</a></td>'
+        .format({
+            lang: vocab.language_string,
+            normstr: v.normalized_string,
+            id: v.lexeme_id,
+            str: v.word_string
+        }));
+
+    var strengthField = $('<td class="strength">{strength}%</td>'.format({
+        strength: Math.round(v.strength * 100)
+    }));
+
+    return $('<tr></tr>').append(vocabField).append(strengthField);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+var timeoutHandle;
+
+function addVocabularyEntry(vocab, i) {
+    if (i < vocab.vocab_overview.length) {
+        var line = makeVocabEntry(vocab, vocab.vocab_overview[i]);
+        line.hide();
+        $(vocabTable).append(line);
+        line.fadeIn(400);
+        timeoutHandle = setTimeout(function () {
+            addVocabularyEntry(vocab, i + 1);
+        }, 1);
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function abortTimeout() {
+    clearTimeout(timeoutHandle);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+var previousVocab;
+
 function addVocabulary(vocab) {
-    if ($("#vocabulary-field").length == 0) {
-        var vocabString = '';
+    if (vocab && (!previousVocab ||
+            vocab.from_language != previousVocab.from_language &&
+            vocab.learning_language != previousVocab.learning_language ||
+            vocab.vocab_overview.length != previousVocab.vocab_overview.length)) {
+        previousVocab = vocab;
+
+        if ($("#vocab-table").length == 0) {
+
+            vocabTable = $('<table id="vocab-table"></table>');
+            title = $('<h2></h2>');
+            var tableContainer = $('<div class="container"></div>').append(vocabTable);
+            var vocabContainer = $('<div class="_2SCNP _1E3L7 vocabulary-viewer"></div>').append(title).append(tableContainer);
+
+            $("div._2_lzu div._21w25").after(vocabContainer);
+        }
+
+        $(title).text('Loading...');
+
+        vocabTable.empty();
 
         vocab.vocab_overview.sort(function (left, right) {
             if (left.strength > right.strength) {
@@ -32,51 +140,20 @@ function addVocabulary(vocab) {
             return 0;
         });
 
-        vocab.vocab_overview.forEach(function (v) {
-            vocabString += '<tr><td><a href="/dictionary/{0}/{1}/{2}">'.format(vocab.language_string, v.normalized_string, v.lexeme_id) +
-                '{0}</a></td><td>{1}%</td></tr>'.format(v.word_string, Math.round(v.strength * 100));
-        });
-
-        vocabString += "</table></div>";
-        $("div._2_lzu div._21w25").after(
-            '<div class="_2SCNP _1E3L7" id="vocabulary-field"><table id="vocabulary-table" style="width:100%"><div id="vocabulary-label" class="_6Hq2p _3FQrh _1uzK0 _3f25b _2arQ0 _3skMI _2ESN4">Word strength - {0}</div>{1}</table></div>'.format(vocab.vocab_overview.length, vocabString)).after(toggleVocabularyTable);
+        $(title).text('Vocab - {vocabCount} words learned'.format({
+            vocabCount: vocab.vocab_overview.length
+        }));
+        abortTimeout();
+        addVocabularyEntry(vocab, 0);
     }
 }
 
-function toggleVocabularyTable() {
-    var vocabTable = $('#vocabulary-table');
-
-    $(vocabTable).toggle();
-}
-
-$('body').on('click', '#vocabulary-label', function () {
-    toggleVocabularyTable();
-});
+// ---------------------------------------------------------------------------------------------------------
 
 $(function () {
-    DuolingoHelper.requestVocabulary(
-        addVocabulary,
-        function () {}
-    );
-});
-
-function addVocabularyField() {
-    $("#vocabulary-field").remove();
-    DuolingoHelper.requestVocabulary(
-        addVocabulary,
-        function () {}
-    );
-}
-
-DuolingoHelper.onCaughtUserId.push(addVocabularyField);
-
-DuolingoHelper.onPageUpdate.push(function (mutations) {
-    mutations.forEach(function (mutation) {
-        mutation.addedNodes.forEach(function (addedNode) {
-            if (addedNode.localName == "div") {
-                addVocabularyField();
-            }
-        });
+    GM_addStyle(css);
+    helper.requestVocabulary({
+        success: addVocabulary
     });
 });
 
