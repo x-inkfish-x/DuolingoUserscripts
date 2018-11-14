@@ -1,18 +1,18 @@
 // ==UserScript==
-// @name         Vocabulary Viewer
+// @name         Vocabulary Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      0.1.17
+// @version      1.0.0
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
 
 // @grant        GM_addStyle
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/VocabularyViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/VocabularyViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/VocabularyViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/VocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/master/DuolingoHelper2.0.js
+// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/Beta/DuolingoHelper2.1.js
 
 // ==/UserScript==
 
