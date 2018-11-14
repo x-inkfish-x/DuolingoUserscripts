@@ -1,18 +1,17 @@
 // ==UserScript==
-// @name         Skill Vocabulary Viewer Beta
+// @name         Skill Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.2.1
+// @version      1.3.4
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
-// @run-at       document-start
 // @grant        GM_addStyle
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
@@ -74,6 +73,7 @@ var css = `
     left: 0.42em;
     font-size: 1em;
     color: #534;
+    cursor: default;
 }
 
 .skill-vocab .dictionary{
@@ -83,6 +83,8 @@ var css = `
 }
 
 .skill-vocab .dictionary tr{
+    display: block;
+    border-radius: 1em;
     background-color: #dddddd;
 }
 
@@ -91,6 +93,7 @@ var css = `
 }
 
 .skill-vocab .dictionary .word{
+    padding-left: 1.5em;
     min-width: 13em;
 }
 
@@ -113,21 +116,29 @@ var css = `
     border-radius: 50%;
     width: 2em;
     height: 2em;
-    animation: spin 1.75s linear infinite, bob 1.75s linear infinite;
+    animation: spin 1.75s linear infinite, bob 1s linear infinite;
     margin-top 2em;
     margin-left: auto;
     margin-right: auto;
 }
 
 @keyframes spin{
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg) scale(0.8); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(0.8); }
 }
 
 @keyframes bob{
-    0% { border-top: 0.3em solid #0048ba; }
-    50% { border-top: 0.6em solid #0048ba; }
-    100% { border-top: 0.3em solid #0048ba; }
+    0% {
+        border: 0.4em solid #8ca5cc;
+        border-top: 0.3em solid #0048ba; }
+    50% {
+        border: 0.2em solid #8ca5cc;
+        border-top: 0.6em solid #0048ba; }
+    100% {
+        border: 0.4em solid #8ca5cc;
+        border-top: 0.3em solid #0048ba;
+    }
 }
 `;
 
@@ -136,6 +147,8 @@ var css = `
 var helper = new DuolingoHelper({
     onPageUpdate: addVocabButtons
 });
+
+var container;
 
 // ---------------------------------------------------------------------------------------------------------
 
@@ -163,7 +176,7 @@ function addError(element, vocab) {
 
 function doNextVocab(text, vocab, i) {
     i = i + 1;
-    if (i < vocab.length) {
+    if (i < vocab.length && $(container).css('display') != 'none') {
         populateSingleWord(text, vocab, i);
     } else {
         $(text).find('.loader').fadeOut(500);
@@ -195,7 +208,6 @@ function populateSingleWord(text, vocab, i) {
 
 function populateContainer(element, vocab) {
     if (vocab.length > 0) {
-        var container = $(element).find('div.container');
         $(container).find('.loader').show();
         var text = $(container).find('.text');
 
@@ -216,30 +228,11 @@ function showContainer(element) {
 
 function addVocabButton(skillElement, vocab) {
     if ($(skillElement).find('div.skill-vocab').length == 0) {
-        var exit = $('<span class="close" title="Close">&times;</span>')
-            .click(function (obj) {
-                var container = $(obj.target).closest('div.container');
-                if ($(container).css('display') != 'none') {
-                    obj.stopPropagation();
-                    $(container).fadeOut(500);
-                    return false;
-                }
-            });
-
-
-        var text = $('<div class="text"></div>');
-
-        var container = $('<div class="container"></div>')
-            .hide()
-            .append(text)
-            .append(exit)
 
         var button = $('<span class="icon">&#x24cc;</span>');
 
         var skill = $('<div class="skill-vocab"></div>')
             .click(function (obj) {
-
-                var container = $(obj.currentTarget).find('div.container');
                 var containerVisible = $(container).css('display');
                 if (containerVisible == 'none') {
                     populateContainer(obj.currentTarget, vocab);
@@ -247,7 +240,7 @@ function addVocabButton(skillElement, vocab) {
                 }
             });
 
-        $(skill).append(container);
+
         $(skill).append(button);
         $(skillElement).append(skill);
     }
@@ -260,6 +253,32 @@ function addVocabButtons() {
         helper.requestVocabulary({
             success: function (vocab) {
                 if (vocab) {
+                    var vocabFieldTarget = $('div#root');
+
+                    if ($(vocabFieldTarget.find('div.skill-vocab')).length == 0) {
+                        var exit = $('<span class="close" title="Close">&times;</span>')
+                            .click(function (obj) {
+                                container = $(obj.target).closest('div.container');
+                                if ($(container).css('display') != 'none') {
+                                    obj.stopPropagation();
+                                    $(container).fadeOut(500);
+                                    return false;
+                                }
+                            });
+
+
+                        var text = $('<div class="text"></div>');
+
+                        container = $('<div class="container"></div>')
+                            .hide()
+                            .append(text)
+                            .append(exit)
+
+                        var vocabField = $('<div class="skill-vocab"></div>').append(container);
+
+                        $(vocabFieldTarget).append(vocabField);
+                    }
+
                     var skills = helper.getLocalCurrentSkills();
                     helper.forEachSkill({
                         skills: skills,
