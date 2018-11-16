@@ -83,7 +83,7 @@ function setLanguageLevel() {
         var levelBox = $('<div class="aFqnr _1E3L7 language-level"></div>')
             .append(levelTitle)
             .append(levelCircle);
-        $(levelParentField).before(levelBox);
+        $(levelParentField).first().before(levelBox);
     }
 
     levelTextField.text(getLanguageLevel);

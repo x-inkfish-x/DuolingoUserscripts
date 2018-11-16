@@ -23,19 +23,21 @@ var css = `
     cursor: default;
 }
 
-.xp-level .circle{
-    margin-left: auto;
-    margin-right: auto;
-    border-style: solid;
-    width: 4em;
-    height: 4em;
-    border-radius: 2em;
+.xp-level .level{
+    text-align: right;
+    font-size: 1em;
 }
 
-.xp-level .level{
-    text-align: center;
-    transform: translateY(0.15em);
-    font-size: 2em;
+.xp-level .bar{
+    border: solid 0.1em #000;
+    border-radius: 0.5em;
+    height: 1em;
+}
+
+.xp-level .bar .progress{
+    background-color: #0f0;
+    height: 95%;
+    border-radius: 0.5em;
 }
 `;
 
@@ -44,6 +46,17 @@ var helper = new DuolingoHelper({
 });
 
 var xpTextField;
+var progressBar;
+
+// ---------------------------------------------------------------------------------------------------------
+
+function rgbToHex(rgb) {
+    var hex = Number(rgb).toString(16);
+    if (hex.length < 2) {
+        hex = "0" + hex;
+    }
+    return hex;
+}
 
 // ---------------------------------------------------------------------------------------------------------
 
@@ -51,16 +64,30 @@ function getXpUntilNextLevel() {
     var currentXp = helper.getCurrentCourse().xp;
     var cutoffs = helper.getLocalState().config.xpLevelCutoffs;
 
-    for (var i = 1; i < cutoffs.length; i++) {
+    for (var i = 0; i < cutoffs.length; i++) {
         var nextXp = currentXp - cutoffs[i];
 
-        if( nextXp <= 0 ){
-            return currentXp - cutoffs[i - 1];
+        if (nextXp < 0) {
+            var cutoff = cutoffs[i];
+            var prevCutoff = 0;
+
+            if (i > 0) {
+                prevCutoff = cutoffs[i - 1];
+            }
+
+            return {
+                fReq: currentXp - prevCutoff,
+                req: cutoff - prevCutoff
+            };
         }
     }
 
     var maxCutoff = cutoffs[cutoffs.length - 1];
-    return maxCutoff - currentXp % maxCutoff;
+
+    return {
+        req: maxCutoff,
+        fReq: currentXp % maxCutoff
+    };
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -70,17 +97,35 @@ function setXpUntilNextLevel() {
         GM_addStyle(css);
         var parentField = $('div.aFqnr._1E3L7')
 
-        xpTextField = $('<div class="level">{level}</div>');
-        var xpCircle = $('<div class="circle"></div>')
-            .append(xpTextField);
-        var xpTitle = $('<h2>XP Remaining</h2>');
+        xpTextField = $('<div class="level"></div>');
+        progressBar = $('<div class="progress"></div>');
+        var barOutline = $('<div class="bar"></div>')
+            .append(progressBar);
+
+        var xpTitle = $('<h2>Level progress</h2>');
         var xpBox = $('<div class="aFqnr _1E3L7 xp-level"></div>')
             .append(xpTitle)
-            .append(xpCircle);
-        $(parentField).before(xpBox);
+            .append(xpTextField)
+            .append(barOutline);
+        $(parentField).first().before(xpBox);
     }
+    var xpStuff = getXpUntilNextLevel();
+    xpTextField.text('{fReq}/{req}'.format(xpStuff));
 
-    xpTextField.text(getXpUntilNextLevel);
+    var progressFraction = xpStuff.fReq / xpStuff.req;
+
+    progressBar.css('width', '{prog}%'.format({
+        prog: progressFraction * 100
+    }));
+
+    var colorString = '#{red}{green}{blue}{alpha}'
+        .format({
+            red: rgbToHex(Math.round(255 * (1 - progressFraction * progressFraction))),
+            green: rgbToHex(Math.round(255 * Math.sqrt(progressFraction))),
+            blue: '00',
+            alpha: '88'
+        });
+    progressBar.css('background-color', colorString);
 }
 
 // ---------------------------------------------------------------------------------------------------------
