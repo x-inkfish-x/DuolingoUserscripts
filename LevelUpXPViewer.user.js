@@ -32,9 +32,18 @@ var css = `
     width: 100%;
 }
 
+.xp-level table{
+    width: 100%;
+    margin: 0;
+}
+
+.xp-level table .bar-cell{
+    width:100%;
+}
+
 .xp-level .progress .bar{
     display: inline-block;
-    width: 80%;
+    width: 100%;
     border: solid 0.1em #000;
     border-radius: 0.5em;
     height: 1em;
@@ -80,7 +89,7 @@ function getLanguageLevel() {
     if (remainingCutoffs == 0) {
         var levels = cutoffs.length;
         var maxCutoff = cutoffs[levels - 1];
-        
+
         while (true) {
             xp = xp - maxCutoff;
             if (xp < 0) {
@@ -134,20 +143,29 @@ function setXpUntilNextLevel() {
         var parentField = $('div.aFqnr._1E3L7')
 
         xpTextField = $('<div class="level"></div>');
+
         progressBar = $('<span class="progress-bar"></span>');
         var barOutline = $('<span class="bar"></span>')
             .append(progressBar);
-        fromLevel = $('<span>0</span>');
-        toLevel = $('<span style="float: right;">1</span>');
-        var progressField = $('<div class="progress"></div>')
+        var barCell = $('<td class="bar-cell"></td>')
+            .append(barOutline);
+
+        fromLevel = $('<td>0</td>');
+        toLevel = $('<td></td>');
+
+        var progressField = $('<tr class="progress"></tr>')
             .append(fromLevel)
-            .append(barOutline)
+            .append(barCell)
             .append(toLevel);
+
+        var progressTable = $('<table></table>')
+        .append(progressField);
+
         var xpTitle = $('<h2>Level progress</h2>');
         var xpBox = $('<div class="aFqnr _1E3L7 xp-level"></div>')
             .append(xpTitle)
             .append(xpTextField)
-            .append(progressField);
+            .append(progressTable);
         $(parentField).first().before(xpBox);
     }
     var xpStuff = getXpUntilNextLevel();
