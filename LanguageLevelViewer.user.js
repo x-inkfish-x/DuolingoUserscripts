@@ -11,7 +11,7 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/LanguageLevelViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.1.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
@@ -49,8 +49,24 @@ var levelTextField;
 
 function getLanguageLevel() {
     var cutoffs = helper.getLocalState().config.xpLevelCutoffs;
-    var currentCourse = helper.getCurrentCourse();
-    return 25 - cutoffs.filter(c => c > currentCourse.xp).length;
+    var xp = helper.getCurrentCourse().xp;
+    var remainingCutoffs = cutoffs.filter(c => c > xp).length;
+
+    if (remainingCutoffs == 0) {
+        var levels = cutoffs.length;
+        var maxCutoff = cutoffs[levels - 1];
+        
+        while (true) {
+            xp = xp - maxCutoff;
+            if (xp < 0) {
+                return levels;
+            }
+
+            levels = levels + 1;
+        }
+    }
+
+    return 25 - remainingCutoffs;
 }
 
 // ---------------------------------------------------------------------------------------------------------
