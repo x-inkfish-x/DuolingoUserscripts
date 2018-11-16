@@ -28,13 +28,23 @@ var css = `
     font-size: 1em;
 }
 
-.xp-level .bar{
+.xp-level .progress{
+    width: 100%;
+}
+
+.xp-level .progress .bar{
+    display: inline-block;
+    width: 80%;
     border: solid 0.1em #000;
     border-radius: 0.5em;
     height: 1em;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.xp-level .bar .progress{
+.xp-level .progress .bar .progress-bar{
+    display: block;
+    width: 10em;
     background-color: #0f0;
     height: 95%;
     border-radius: 0.5em;
@@ -47,6 +57,8 @@ var helper = new DuolingoHelper({
 
 var xpTextField;
 var progressBar;
+var fromLevel;
+var toLevel;
 
 // ---------------------------------------------------------------------------------------------------------
 
@@ -56,6 +68,30 @@ function rgbToHex(rgb) {
         hex = "0" + hex;
     }
     return hex;
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function getLanguageLevel() {
+    var cutoffs = helper.getLocalState().config.xpLevelCutoffs;
+    var xp = helper.getCurrentCourse().xp;
+    var remainingCutoffs = cutoffs.filter(c => c > xp).length;
+
+    if (remainingCutoffs == 0) {
+        var levels = cutoffs.length;
+        var maxCutoff = cutoffs[levels - 1];
+        
+        while (true) {
+            xp = xp - maxCutoff;
+            if (xp < 0) {
+                return levels;
+            }
+
+            levels = levels + 1;
+        }
+    }
+
+    return 25 - remainingCutoffs;
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -98,15 +134,20 @@ function setXpUntilNextLevel() {
         var parentField = $('div.aFqnr._1E3L7')
 
         xpTextField = $('<div class="level"></div>');
-        progressBar = $('<div class="progress"></div>');
-        var barOutline = $('<div class="bar"></div>')
+        progressBar = $('<span class="progress-bar"></span>');
+        var barOutline = $('<span class="bar"></span>')
             .append(progressBar);
-
+        fromLevel = $('<span>0</span>');
+        toLevel = $('<span style="float: right;">1</span>');
+        var progressField = $('<div class="progress"></div>')
+            .append(fromLevel)
+            .append(barOutline)
+            .append(toLevel);
         var xpTitle = $('<h2>Level progress</h2>');
         var xpBox = $('<div class="aFqnr _1E3L7 xp-level"></div>')
             .append(xpTitle)
             .append(xpTextField)
-            .append(barOutline);
+            .append(progressField);
         $(parentField).first().before(xpBox);
     }
     var xpStuff = getXpUntilNextLevel();
@@ -126,6 +167,11 @@ function setXpUntilNextLevel() {
             alpha: '88'
         });
     progressBar.css('background-color', colorString);
+
+    var level = getLanguageLevel();
+
+    fromLevel.text(level);
+    toLevel.text(level + 1);
 }
 
 // ---------------------------------------------------------------------------------------------------------
