@@ -18,6 +18,21 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
+DuolingoHelper.prototype.getChangeListenerTarget = function () {
+    return $('div.i12-l')[0];
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.createChangeListenerConfig = function () {
+    return {
+        childList: true,
+        subtree: true
+    };
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 var helper = new DuolingoHelper({
     onPageUpdate: function (mutations) {
         helper.requestVocabulary({
@@ -65,6 +80,7 @@ var css = `
 
 var vocabTable;
 var title;
+
 // ---------------------------------------------------------------------------------------------------------
 
 function makeVocabEntry(vocab, v) {
@@ -88,7 +104,7 @@ function makeVocabEntry(vocab, v) {
 var timeoutHandle;
 
 function addVocabularyEntry(vocab, i) {
-    if (i < vocab.vocab_overview.length) {
+    if (i < vocab.vocab_overview.length && vocabTable) {
         var line = makeVocabEntry(vocab, vocab.vocab_overview[i]);
         line.hide();
         $(vocabTable).append(line);
@@ -109,42 +125,46 @@ function abortTimeout() {
 var previousVocab;
 
 function addVocabulary(vocab) {
-    if (vocab && (!previousVocab ||
-            vocab.from_language != previousVocab.from_language &&
-            vocab.learning_language != previousVocab.learning_language ||
-            vocab.vocab_overview.length != previousVocab.vocab_overview.length)) {
-        previousVocab = vocab;
+    if (vocab) {
+        var hasVocabTable = $("#vocab-table").length > 0;
+        if (!hasVocabTable ||
+            (!previousVocab ||
+                vocab.from_language != previousVocab.from_language &&
+                vocab.learning_language != previousVocab.learning_language ||
+                vocab.vocab_overview.length != previousVocab.vocab_overview.length)) {
+            previousVocab = vocab;
 
-        if ($("#vocab-table").length == 0) {
+            if (!hasVocabTable) {
 
-            vocabTable = $('<table id="vocab-table"></table>');
-            title = $('<h2></h2>');
-            var tableContainer = $('<div class="container"></div>').append(vocabTable);
-            var vocabContainer = $('<div class="_2SCNP _1E3L7 vocabulary-viewer"></div>').append(title).append(tableContainer);
+                vocabTable = $('<table id="vocab-table"></table>');
+                title = $('<h2></h2>');
+                var tableContainer = $('<div class="container"></div>').append(vocabTable);
+                var vocabContainer = $('<div class="_2SCNP _1E3L7 vocabulary-viewer"></div>').append(title).append(tableContainer);
 
-            $("div._2_lzu div._21w25").after(vocabContainer);
+                $("div._2_lzu div._21w25").after(vocabContainer);
+            }
+
+            $(title).text('Loading...');
+
+            vocabTable.empty();
+
+            vocab.vocab_overview.sort(function (left, right) {
+                if (left.strength > right.strength) {
+                    return 1;
+                }
+                if (left.strength < right.strength) {
+                    return -1;
+                }
+
+                return 0;
+            });
+
+            $(title).text('Vocab - {vocabCount} words learned'.format({
+                vocabCount: vocab.vocab_overview.length
+            }));
+            abortTimeout();
+            addVocabularyEntry(vocab, 0);
         }
-
-        $(title).text('Loading...');
-
-        vocabTable.empty();
-
-        vocab.vocab_overview.sort(function (left, right) {
-            if (left.strength > right.strength) {
-                return 1;
-            }
-            if (left.strength < right.strength) {
-                return -1;
-            }
-
-            return 0;
-        });
-
-        $(title).text('Vocab - {vocabCount} words learned'.format({
-            vocabCount: vocab.vocab_overview.length
-        }));
-        abortTimeout();
-        addVocabularyEntry(vocab, 0);
     }
 }
 

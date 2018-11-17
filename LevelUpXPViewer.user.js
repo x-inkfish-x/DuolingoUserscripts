@@ -17,6 +17,21 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
+DuolingoHelper.prototype.getChangeListenerTarget = function(){
+    return $('div.i12-l')[0];
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.createChangeListenerConfig = function(){
+    return {
+        childList: true,
+        subtree: true
+    };
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 var css = `
 .xp-level{
     line-height: 3em;
