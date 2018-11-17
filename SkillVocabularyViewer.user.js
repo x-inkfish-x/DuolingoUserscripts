@@ -11,7 +11,7 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.1.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
 
 // ==/UserScript==
 

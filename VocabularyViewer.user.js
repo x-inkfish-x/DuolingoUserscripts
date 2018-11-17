@@ -12,7 +12,7 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/VocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/Beta/DuolingoHelper2.1.js
+// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/Beta/DuolingoHelper2.0.js
 
 // ==/UserScript==
 
