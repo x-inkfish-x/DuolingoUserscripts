@@ -92,6 +92,11 @@ var css = `
     background-color: #cccccc;
 }
 
+.skill-vocab .dictionary .pos{
+    min-width: 3.5em;
+    font-style: italic;
+}
+
 .skill-vocab .dictionary .word{
     padding-left: 1.5em;
     min-width: 13em;
@@ -152,9 +157,34 @@ var container;
 
 // ---------------------------------------------------------------------------------------------------------
 
-function addDefinition(element, def) {
-    var defLine = $('<tr><td class="word"><a href="{path}" target="_blank">{word}</a></td><td class="translations">{translation}</td></tr>'.format({
+function makePartOfSpeech(vocab){
+    if(vocab.pos)
+    {
+        var pos = vocab.pos.toLowerCase()[0];
+
+        if( pos == 'a'){
+            pos = vocab.pos.toLowerCase().substring(0, 3);
+        }
+        else if(pos == 'n' && vocab.gender){
+            pos = pos + vocab.gender.toLowerCase()[0];
+        }
+        else if( pos == 'p')
+        {
+            pos = 'pn';
+        }
+    
+        return pos + '.';
+    }
+    
+    return '';
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function addDefinition(element, def, vocab) {
+    var defLine = $('<tr><td class="word"><a href="{path}" target="_blank">{word}</a></td><td class="translations">{translation}</td><td class="pos">{pos}</td></tr>'.format({
         word: def.word,
+        pos: makePartOfSpeech(vocab),
         translation: def.translations,
         path: def.canonical_path
     })).hide();
@@ -192,7 +222,7 @@ function populateSingleWord(text, vocab, i) {
         lexemeId: v.lexeme_id,
         success: function (obj) {
             if (obj) {
-                addDefinition(text, obj);
+                addDefinition(text, obj, v);
             }
 
             doNextVocab(text, vocab, i);
