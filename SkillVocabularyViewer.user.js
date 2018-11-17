@@ -93,7 +93,7 @@ var css = `
 }
 
 .skill-vocab .dictionary .pos{
-    min-width: 3.5em;
+    min-width: 4.5em;
     font-style: italic;
 }
 
@@ -157,29 +157,28 @@ var container;
 
 // ---------------------------------------------------------------------------------------------------------
 
-function makePartOfSpeech(vocab){
-    if(vocab.pos)
-    {
-        var pos = vocab.pos.toLowerCase()[0];
-
-        if( pos == 'a'){
+function makePartOfSpeech(vocab) {
+    if (vocab.pos) {
+        var pos = vocab.pos.toLowerCase();
+        var gender = '';
+        if(vocab.gender){
+            gender = vocab.gender.toLowerCase()[0];
+        }
+        if (pos == 'adjective' || pos == 'adverb') {
             pos = vocab.pos.toLowerCase().substring(0, 3);
-        }
-        else if(pos == 'n' && vocab.gender){
-            pos = pos + vocab.gender.toLowerCase()[0];
-        }
-        else if( pos == 'p')
-        {
+        } else if (pos == 'noun') {
+            pos = pos[0];
+        } else if (pos == 'pronoun') {
             pos = 'pn';
+        } else if (pos == 'interjection') {
+            pos = 'intrj';
+        } else {
+            pos = pos[0];
         }
-        else if( pos == 'i')
-        {
-            pos = 'intr';
-        }
-    
-        return pos + '.';
+
+        return pos + gender + '.';
     }
-    
+
     return '';
 }
 
