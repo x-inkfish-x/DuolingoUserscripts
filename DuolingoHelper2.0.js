@@ -306,6 +306,22 @@ DuolingoHelper.prototype.isMainPage = function () {
 
 // Listening
 
+DuolingoHelper.prototype.getChangeListenerTarget = function(){
+    return document.querySelector("body");
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.createChangeListenerConfig = function(){
+    return {
+        attributes: true,
+        childList: true,
+        characterData: true
+    };
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 DuolingoHelper.prototype.startListenForContentUpdate = function () {
     this.observer = new MutationObserver(function (mutations) {
         if (this.onPageUpdate) {
@@ -313,15 +329,7 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
         }
     }.bind(this));
 
-    var target = document.querySelector("body");
-
-    var config = {
-        attributes: true,
-        childList: true,
-        characterData: true
-    }
-
-    this.observer.observe(target, config);
+    this.observer.observe(this.getChangeListenerTarget(), this.createChangeListenerConfig());
 }
 
 // ---------------------------------------------------------------------------------------------------------
