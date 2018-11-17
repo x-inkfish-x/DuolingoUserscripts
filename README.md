@@ -17,7 +17,3 @@ I hope you'll find at least one that interests you. It's been a really interesti
 I'll do my best to maintain these in the future, but my hope is that they will work with minimal maintenance as long as DuolingoHelper is kept up to date. 
 
 If you have any suggestions for how to improme my scripts, or some other scripts to add, please don't hesitate to give me a shout! (although, if you are a developer/curious about JavaScript, I would encourage you to write your own. If you want to use the DuolingoHelper, just head over to the [wiki](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki) which will explain most of the class to you.)
-
-Regards,
-
-Legato né Mikael
