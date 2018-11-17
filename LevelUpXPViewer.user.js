@@ -44,17 +44,13 @@ var css = `
 .xp-level .progress .bar{
     display: inline-block;
     width: 100%;
+    height: 1em;
     border: solid 0.1em #000;
     border-radius: 0.5em;
-    height: 1em;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .xp-level .progress .bar .progress-bar{
     display: block;
-    width: 10em;
-    background-color: #0f0;
     height: 95%;
     border-radius: 0.5em;
 }
