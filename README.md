@@ -7,7 +7,7 @@ Just a few userscripts I made to test the capabilities of the DuolingoHelper tha
 ### [Language Level Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Language-Level-Viewer)
 ### [Notes Indicator](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Notes-Indicator)
 ### [Skill Hider](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Skill-Hider)
-### [Skill Vocabulary Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Vocabulary-Viewer)
+### [Skill Vocabulary Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Skill-Vocabulary-Viewer)
 ### [Strength Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Strength-Viewer)
 
 ***
