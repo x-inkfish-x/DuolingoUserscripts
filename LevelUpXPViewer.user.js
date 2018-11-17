@@ -17,17 +17,11 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.getChangeListenerTarget = function(){
-    return $('div.i12-l')[0];
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
 DuolingoHelper.prototype.createChangeListenerConfig = function(){
     return {
         childList: true,
         subtree: true
-    };
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -72,7 +66,17 @@ var css = `
 `;
 
 var helper = new DuolingoHelper({
-    onPageUpdate: setXpUntilNextLevel
+    onPageUpdate: function (mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+            var mutation = mutations[i];
+
+            if (mutation.target.classList.contains('LFfrA') &&
+                mutation.target.classList.contains('_3MLiB')) {
+                setXpUntilNextLevel();
+                return;
+            }
+        }
+    }
 });
 
 var xpTextField;
@@ -170,7 +174,7 @@ function setXpUntilNextLevel() {
             .append(toLevel);
 
         var progressTable = $('<table></table>')
-        .append(progressField);
+            .append(progressField);
 
         var xpTitle = $('<h2>Level progress</h2>');
         var xpBox = $('<div class="aFqnr _1E3L7 xp-level"></div>')

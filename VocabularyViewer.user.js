@@ -18,26 +18,28 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.getChangeListenerTarget = function () {
-    return $('div.i12-l')[0];
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.prototype.createChangeListenerConfig = function () {
+DuolingoHelper.prototype.createChangeListenerConfig = function(){
     return {
         childList: true,
         subtree: true
-    };
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
 var helper = new DuolingoHelper({
     onPageUpdate: function (mutations) {
-        helper.requestVocabulary({
-            success: addVocabulary
-        });
+        for (var i = 0; i < mutations.length; i++) {
+            var mutation = mutations[i];
+
+            if (mutation.target.classList.contains('LFfrA') &&
+                mutation.target.classList.contains('_3MLiB')) {
+                helper.requestVocabulary({
+                    success: addVocabulary
+                });
+                return;
+            }
+        }
     }
 });
 
