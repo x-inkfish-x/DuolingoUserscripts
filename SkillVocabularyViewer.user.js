@@ -172,6 +172,10 @@ function makePartOfSpeech(vocab){
         {
             pos = 'pn';
         }
+        else if( pos == 'i')
+        {
+            pos = 'intr';
+        }
     
         return pos + '.';
     }
