@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.3.4
+// @version      1.3.5
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -283,10 +283,12 @@ function addVocabButtons() {
                     helper.forEachSkill({
                         skills: skills,
                         func: function (skill, skillField) {
-                            var filteredVocab = vocab.vocab_overview.filter(v => skill.urlName == v.skill_url_title);
+                            if (skillField) {
+                                var filteredVocab = vocab.vocab_overview.filter(v => skill.urlName == encodeURIComponent(v.skill_url_title));
 
-                            if (filteredVocab.length > 0) {
-                                addVocabButton(skillField, filteredVocab);
+                                if (filteredVocab.length > 0) {
+                                    addVocabButton(skillField, filteredVocab);
+                                }
                             }
                         }
                     });
