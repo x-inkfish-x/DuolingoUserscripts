@@ -294,34 +294,27 @@ DuolingoHelper.prototype.createChangeListenerConfig = function(){
 
 DuolingoHelper.prototype.startListenForContentUpdate = function () {
     this.observer = new MutationObserver(function (mutations) {
+        var skillElements = [];
         for( var mutation of mutations ){
             for( var  node of mutation.addedNodes ){
                 if (node.localName == 'div') {
-                    var skillElements = node.getElementsByClassName(this.skillElementClass);
-                    if(skillElements){
-                        if (skillElements.length > 0) {
-                            if (this.onPageUpdate) {
-                                this.onPageUpdate(mutations);
-                            }
-                        }
-
-                        if (this.onSkillAdded) {
-                            for (var skillElement of skillElements) {
-                                this.onSkillAdded(this.getSkillForElement(skillElement), skillElement)
-                            }
-                        }
-                    }
+                    skillElements.concat( node.getElementsByClassName(this.skillElementClass) );
                 }
                 else if(node.classList && node.classList.contains(this.skillElementClass)){
-                    if (this.onPageUpdate) {
-                        this.onPageUpdate(mutations);
-                    }
-
-                    if(this.onSkillAdded)
-                    {
-                        this.onSkillAdded(this.getSkillForElement(node), node);
-                    }
+                    skillElements.push(node);
                 }
+            }
+        }
+
+        if (skillElements.length > 0) {
+            if (this.onPageUpdate) {
+                this.onPageUpdate(mutations);
+            }
+        }
+
+        if (this.onSkillAdded) {
+            for (var skillElement of skillElements) {
+                this.onSkillAdded(this.getSkillForElement(skillElement), skillElement)
             }
         }
     }.bind(this));
