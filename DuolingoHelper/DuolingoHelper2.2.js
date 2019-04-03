@@ -300,7 +300,7 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
                 if (node.localName == 'div') {
                     var foundElements = node.getElementsByClassName(this.skillElementClass);
                     if (foundElements && foundElements.length > 0) {
-                        skillElements = skillElements.concat(foundElements);
+                        skillElements = skillElements.concat(Array.from(foundElements));
                     }
                 } else if (node.classList && node.classList.contains(this.skillElementClass)) {
                     skillElements.push(node);
