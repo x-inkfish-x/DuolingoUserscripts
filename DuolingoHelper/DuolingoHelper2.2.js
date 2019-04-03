@@ -277,13 +277,13 @@ DuolingoHelper.prototype.isMainPage = function () {
 
 // Listening
 
-DuolingoHelper.prototype.getChangeListenerTarget = function(){
+DuolingoHelper.prototype.getChangeListenerTarget = function () {
     return document.querySelector("body");
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.createChangeListenerConfig = function(){
+DuolingoHelper.prototype.createChangeListenerConfig = function () {
     return {
         childList: true,
         subtree: true
@@ -295,12 +295,14 @@ DuolingoHelper.prototype.createChangeListenerConfig = function(){
 DuolingoHelper.prototype.startListenForContentUpdate = function () {
     this.observer = new MutationObserver(function (mutations) {
         var skillElements = [];
-        for( var mutation of mutations ){
-            for( var  node of mutation.addedNodes ){
+        for (var mutation of mutations) {
+            for (var node of mutation.addedNodes) {
                 if (node.localName == 'div') {
-                    skillElements.concat( node.getElementsByClassName(this.skillElementClass) );
-                }
-                else if(node.classList && node.classList.contains(this.skillElementClass)){
+                    var foundElements = node.getElementsByClassName(this.skillElementClass);
+                    if (foundElements && foundElements.length > 0) {
+                        skillElements = skillElements.concat(foundElements);
+                    }
+                } else if (node.classList && node.classList.contains(this.skillElementClass)) {
                     skillElements.push(node);
                 }
             }
@@ -330,9 +332,8 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 
 // Other useful functions
 
-DuolingoHelper.prototype.addStyle = function(style)
-{
-    if(style){
+DuolingoHelper.prototype.addStyle = function (style) {
+    if (style) {
         var styleElement = document.createElement('style');
 
         styleElement.innerHTML = style;
