@@ -336,43 +336,6 @@ String.prototype.format = function (args) {
     return a;
 }
 
-
-// var findLessonRecursive = function(nodeList)
-// {
-//     if( nodeList != undefined )
-//     {
-//         for( var node of nodeList){
-//             if( node.classList != undefined && node.classList.contains('Af4up')){
-//                 var skill = helper.getSkillForElement(node);
-//                 insertSkillStrength(skill, node);
-//             }
-//             else
-//             {
-//                 findLessonRecursive(node.children);
-//             }
-//         }
-//     }
-// }
-
-// var mutationCallback = function(mutationsList, observer)
-// {
-//     mutationsList.forEach(function(mutation){
-//         mutation.addedNodes.forEach(function(node){
-//             if(node.localName == 'div'){
-//                 findLessonRecursive(node.children);
-//             }
-//         });
-//     });
-// }
-
-// var observer = new MutationObserver(mutationCallback);
-
-// var config = { childList: true, subtree: true };
-// var targetNode = document.getElementById('body');
-
-// observer.observe(document.body, config);
-
-
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
