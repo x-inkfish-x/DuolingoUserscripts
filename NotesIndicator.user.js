@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         Tips and Notes Indicator Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.4.1
+// @version      1.4.2
 // @description  A Duolingo userscripts that adds an indicator to skills with tips and notes
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
-// @grant        GM_addStyle
 
 // @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/NotesIndicator.user.js
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/NotesIndicator.user.js
