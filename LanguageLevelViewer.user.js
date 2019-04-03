@@ -1,17 +1,16 @@
 // ==UserScript==
 // @name         Language Level Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.1.0
+// @version      1.1.1
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
-// @grant        GM_addStyle
 
 // @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/LanguageLevelViewer.user.js
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/LanguageLevelViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
@@ -92,7 +91,7 @@ function getLanguageLevel() {
 
 function setLanguageLevel() {
     if ($('div.language-level').length == 0) {
-        GM_addStyle(css);
+        helper.addStyle(css);
         var levelParentField = $('div.aFqnr._1E3L7')
 
         levelTextField = $('<div class="level">{level}</div>');

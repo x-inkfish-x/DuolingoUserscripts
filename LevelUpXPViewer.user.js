@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         XP to Next Level Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      0.1.0
+// @version      0.1.1
 // @description  A script to show how much XP remains until next level
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -11,7 +11,7 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/LevelUpXPViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
@@ -164,7 +164,7 @@ function getXpUntilNextLevel() {
 
 function setXpUntilNextLevel() {
     if ($('div.xp-level').length == 0) {
-        GM_addStyle(css);
+        helper.addStyle(css);
         var parentField = $('div.aFqnr._1E3L7')
 
         xpTextField = $('<div class="level"></div>');

@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         Skill Vocabulary Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.4.1
+// @version      1.4.2
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
-// @grant        GM_addStyle
 
 // @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
@@ -332,7 +331,7 @@ function addVocabButtons() {
 // ---------------------------------------------------------------------------------------------------------
 
 $(function () {
-    GM_addStyle(css);
+    helper.addStyle(css);
     addVocabButtons();
 });
 

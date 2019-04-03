@@ -16,6 +16,8 @@ class DuolingoHelper {
     }
 }
 
+DuolingoHelper.prototype.skillElementClass = 'Af4up';
+
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
@@ -256,7 +258,7 @@ DuolingoHelper.prototype.getSkillForElement = function (element) {
 // Page area helpers
 
 DuolingoHelper.prototype.getSkillFields = function () {
-    return document.getElementsByClassName("Af4up");
+    return document.getElementsByClassName(this.skillElementClass);
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -295,7 +297,7 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
         for( var mutation of mutations ){
             for( var  node of mutation.addedNodes ){
                 if (node.localName == 'div') {
-                    var skillElements = node.getElementsByClassName('Af4up');
+                    var skillElements = node.getElementsByClassName(this.skillElementClass);
                     if(skillElements){
                         if (skillElements.length > 0) {
                             if (this.onPageUpdate) {
@@ -305,11 +307,19 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 
                         if (this.onSkillAdded) {
                             for (var skillElement of skillElements) {
-                                var skill = this.getSkillForElement(skillElement);
-                                
-                                this.onSkillAdded(skill, skillElement)
+                                this.onSkillAdded(this.getSkillForElement(skillElement), skillElement)
                             }
                         }
+                    }
+                }
+                else if(node.classList && node.classList.contains(this.skillElementClass)){
+                    if (this.onPageUpdate) {
+                        this.onPageUpdate(mutations);
+                    }
+
+                    if(this.onSkillAdded)
+                    {
+                        this.onSkillAdded(this.getSkillForElement(node), node);
                     }
                 }
             }
@@ -326,6 +336,22 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 // ---------------------------------------------------------------------------------------------------------
 
 // Other useful functions
+
+DuolingoHelper.prototype.addStyle = function(style)
+{
+    if(style){
+        var styleElement = document.createElement('style');
+
+        styleElement.innerHTML = style;
+
+        var headStyle = document.querySelector('script');
+
+        headStyle.parentNode.insertBefore(styleElement, headStyle);
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 String.prototype.format = function (args) {
     a = this;
 
