@@ -160,7 +160,7 @@ function makePartOfSpeech(vocab) {
     if (vocab.pos) {
         var pos = vocab.pos.toLowerCase();
         var gender = '';
-        if(vocab.gender){
+        if (vocab.gender) {
             gender = vocab.gender.toLowerCase()[0];
         }
         if (pos == 'adjective' || pos == 'adverb') {
@@ -272,10 +272,15 @@ function addVocabButton(skillElement, vocab) {
                 }
             });
 
-
         $(skill).append(button);
         $(skillElement).append(skill);
     }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function removeVocabularyButton(skillElement) {
+    $(skillElement).find('div.skill-vocab').remove();
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -319,6 +324,8 @@ function addVocabButtons() {
 
                             if (filteredVocab.length > 0) {
                                 addVocabButton(skillField, filteredVocab);
+                            } else {
+                                removeVocabularyButton(skillField);
                             }
                         }
                     });

@@ -17,16 +17,6 @@
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.createChangeListenerConfig = function () {
-    return {
-        childList: true,
-        subtree: true,
-        characterData: true
-    }
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
 var css = `
 .xp-level{
     line-height: 3em;
@@ -68,24 +58,7 @@ var css = `
 
 var helper = new DuolingoHelper({
     onPageUpdate: function (mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-            var mutation = mutations[i];
-            if (mutation.target &&
-                mutation.target.parentElement &&
-                mutation.target.parentElement.classList) {
-                if (mutation.target.parentElement.classList.contains('MaHuY')) {
-                    setXpUntilNextLevel();
-                    return;
-                }
-            } else if (mutation.target &&
-                mutation.target.classList &&
-                mutation.target.classList.contains('LFfrA') &&
-                mutation.target.classList.contains('_3MLiB')) {
-
-                setLanguageLevel();
-                return;
-            }
-        }
+        setXpUntilNextLevel();
     }
 });
 
