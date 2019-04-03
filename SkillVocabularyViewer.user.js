@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Vocabulary Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.4.0
+// @version      1.4.1
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -11,7 +11,7 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
@@ -150,7 +150,7 @@ var css = `
 // ---------------------------------------------------------------------------------------------------------
 
 var helper = new DuolingoHelper({
-    onPageUpdate: addVocabButtons
+    onSkillAdded: addVocabButtons
 });
 
 var container;

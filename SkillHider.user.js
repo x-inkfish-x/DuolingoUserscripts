@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Hider Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.4.0
+// @version      1.4.1
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -10,7 +10,7 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillHider.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
@@ -35,7 +35,6 @@ function hasClearedSkills(skills) {
 // ---------------------------------------------------------------------------------------------------------
 
 function setButtonText(skills) {
-    var maxSkillFraction = maxStrengthToShow / maxSkillStrength;
     var shouldTrim = hasClearedSkills(filteredSkills);
 
     if (shouldTrim && !isMinStrengthLessThanMaxShown(skills)) {

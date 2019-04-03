@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Vocabulary Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.0
+// @version      1.0.1
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
@@ -12,34 +12,17 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/VocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/Beta/DuolingoHelper2.0.js
+// @require      https://raw.githubusercontent.com/x-inkfish-x/DuolingoUserscripts/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.createChangeListenerConfig = function(){
-    return {
-        childList: true,
-        subtree: true
-    }
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
 var helper = new DuolingoHelper({
-    onPageUpdate: function (mutations) {
-        for (var i = 0; i < mutations.length; i++) {
-            var mutation = mutations[i];
-
-            if (mutation.target.classList.contains('LFfrA') &&
-                mutation.target.classList.contains('_3MLiB')) {
-                helper.requestVocabulary({
-                    success: addVocabulary
-                });
-                return;
-            }
-        }
+    onPageUpdate: function () {
+        helper.requestVocabulary({
+            success: addVocabulary
+        });
     }
 });
 

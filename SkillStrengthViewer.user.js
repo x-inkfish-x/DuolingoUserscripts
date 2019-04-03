@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Strength Viewer Beta
 // @namespace    https://github.com/x-inkfish-x/
-// @version      2.5.0
+// @version      2.5.1
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -10,14 +10,14 @@
 // @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillStrengthViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
 // ---------------------------------------------------------------------------------------------------------
 
 var helper = new DuolingoHelper({
-    onPageUpdate: addSkillStrength
+    onSkillAdded: insertSkillStrength
 });
 
 var skillStrengthFieldId = "skillStrength";
