@@ -9,6 +9,7 @@ class DuolingoHelper {
     constructor(args) {
         if (args) {
             this.onPageUpdate = args.onPageUpdate;
+            this.onSkillAdded = args.onSkillAdded;
         }
 
         this.startListenForContentUpdate();
@@ -17,38 +18,6 @@ class DuolingoHelper {
 
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------
-
-// Request helpers
-
-DuolingoHelper.prototype.requestCourse = function (args) {
-    if (args.userId) {
-        this.makeGetRequest({
-            url: "/2017-06-30/users/" + args.userId + "?fields=currentCourse",
-            success: function (res) {
-                if (res.length > 0) {
-                    var obj = JSON.parse(res);
-
-                    if (obj) {
-                        args.success(obj.currentCourse);
-                        return;
-                    }
-                    args.success();
-                    return;
-                }
-                args.success();
-            },
-            error: args.error
-        });
-    } else {
-        var userId = this.getUserId();
-        if (userId) {
-            args.userId = userId;
-            this.requestCourse(args);
-        }
-    }
-}
-
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.prototype.requestVocabulary = function (args) {
@@ -306,22 +275,50 @@ DuolingoHelper.prototype.isMainPage = function () {
 
 // Listening
 
+DuolingoHelper.prototype.getChangeListenerTarget = function(){
+    return document.querySelector("body");
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.createChangeListenerConfig = function(){
+    return {
+        childList: true,
+        subtree: true
+    };
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 DuolingoHelper.prototype.startListenForContentUpdate = function () {
     this.observer = new MutationObserver(function (mutations) {
-        if (this.onPageUpdate) {
-            this.onPageUpdate(mutations);
+        for( var mutation of mutations ){
+            for( var  node of mutation.addedNodes ){
+                if (node.localName == 'div') {
+                    var skillElements = node.getElementsByClassName('Af4up');
+                    if(skillElements){
+                        if (skillElements.length > 0) {
+                            if (this.onPageUpdate) {
+                                this.onPageUpdate(mutations);
+                            }
+                        }
+
+                        if (this.onSkillAdded) {
+                            for (var skillElement of skillElements) {
+                                var skill = this.getSkillForElement(skillElement);
+                                
+                                this.onSkillAdded(skill, skillElement)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }.bind(this));
 
     var target = document.querySelector("body");
 
-    var config = {
-        attributes: true,
-        childList: true,
-        characterData: true
-    }
-
-    this.observer.observe(target, config);
+    this.observer.observe(target, this.createChangeListenerConfig());
 }
 
 // ---------------------------------------------------------------------------------------------------------
