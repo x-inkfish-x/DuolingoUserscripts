@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         XP to Next Level Beta
+// @name         Beta XP to Next Level
 // @namespace    https://github.com/x-inkfish-x/
-// @version      0.1.2
+// @version      0.1.3
 // @description  A script to show how much XP remains until next level
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*

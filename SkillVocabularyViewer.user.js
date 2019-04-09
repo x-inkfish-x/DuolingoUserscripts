@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Skill Vocabulary Viewer Beta
+// @name         Beta Skill Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.4.4
+// @version      1.4.5
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
