@@ -9,46 +9,17 @@ class DuolingoHelper {
     constructor(args) {
         if (args) {
             this.onPageUpdate = args.onPageUpdate;
+            this.onSkillAdded = args.onSkillAdded;
         }
 
         this.startListenForContentUpdate();
     }
 }
 
+DuolingoHelper.prototype.skillElementClass = 'Af4up';
+
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
-// ---------------------------------------------------------------------------------------------------------
-
-// Request helpers
-
-DuolingoHelper.prototype.requestCourse = function (args) {
-    if (args.userId) {
-        this.makeGetRequest({
-            url: "/2017-06-30/users/" + args.userId + "?fields=currentCourse",
-            success: function (res) {
-                if (res.length > 0) {
-                    var obj = JSON.parse(res);
-
-                    if (obj) {
-                        args.success(obj.currentCourse);
-                        return;
-                    }
-                    args.success();
-                    return;
-                }
-                args.success();
-            },
-            error: args.error
-        });
-    } else {
-        var userId = this.getUserId();
-        if (userId) {
-            args.userId = userId;
-            this.requestCourse(args);
-        }
-    }
-}
-
 // ---------------------------------------------------------------------------------------------------------
 
 DuolingoHelper.prototype.requestVocabulary = function (args) {
@@ -287,7 +258,7 @@ DuolingoHelper.prototype.getSkillForElement = function (element) {
 // Page area helpers
 
 DuolingoHelper.prototype.getSkillFields = function () {
-    return document.getElementsByClassName("Af4up");
+    return document.getElementsByClassName(this.skillElementClass);
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -306,17 +277,16 @@ DuolingoHelper.prototype.isMainPage = function () {
 
 // Listening
 
-DuolingoHelper.prototype.getChangeListenerTarget = function(){
+DuolingoHelper.prototype.getChangeListenerTarget = function () {
     return document.querySelector("body");
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.createChangeListenerConfig = function(){
+DuolingoHelper.prototype.createChangeListenerConfig = function () {
     return {
-        attributes: true,
         childList: true,
-        characterData: true
+        subtree: true
     };
 }
 
@@ -324,12 +294,36 @@ DuolingoHelper.prototype.createChangeListenerConfig = function(){
 
 DuolingoHelper.prototype.startListenForContentUpdate = function () {
     this.observer = new MutationObserver(function (mutations) {
-        if (this.onPageUpdate) {
-            this.onPageUpdate(mutations);
+        var skillElements = [];
+        for (var mutation of mutations) {
+            for (var node of mutation.addedNodes) {
+                if (node.localName == 'div') {
+                    var foundElements = node.getElementsByClassName(this.skillElementClass);
+                    if (foundElements && foundElements.length > 0) {
+                        skillElements = skillElements.concat(Array.from(foundElements));
+                    }
+                } else if (node.classList && node.classList.contains(this.skillElementClass)) {
+                    skillElements.push(node);
+                }
+            }
+        }
+
+        if (skillElements.length > 0) {
+            if (this.onPageUpdate) {
+                this.onPageUpdate(mutations);
+            }
+        }
+
+        if (this.onSkillAdded) {
+            for (var skillElement of skillElements) {
+                this.onSkillAdded(this.getSkillForElement(skillElement), skillElement)
+            }
         }
     }.bind(this));
 
-    this.observer.observe(this.getChangeListenerTarget(), this.createChangeListenerConfig());
+    var target = document.querySelector("body");
+
+    this.observer.observe(target, this.createChangeListenerConfig());
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -337,6 +331,21 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
 // ---------------------------------------------------------------------------------------------------------
 
 // Other useful functions
+
+DuolingoHelper.prototype.addStyle = function (style) {
+    if (style) {
+        var styleElement = document.createElement('style');
+
+        styleElement.innerHTML = style;
+
+        var headStyle = document.querySelector('script');
+
+        headStyle.parentNode.insertBefore(styleElement, headStyle);
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 String.prototype.format = function (args) {
     a = this;
 

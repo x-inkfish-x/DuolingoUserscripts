@@ -160,20 +160,6 @@ DuolingoHelper.prototype.getLocalCurrentSkills = function () {
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.getCurrentCourse = function () {
-    var state = this.getLocalState();
-
-    if (state) {
-        var courseArray = Object.values(state.courses);
-
-        return courseArray.find(c => c.learningLanguage == state.user.learningLanguage && c.fromLanguage == state.user.fromLanguage);
-    }
-
-    return undefined;
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
 DuolingoHelper.prototype.getLocalUser = function () {
     var state = this.getLocalState();
 
@@ -194,14 +180,6 @@ DuolingoHelper.prototype.getUserId = function () {
     }
 
     return undefined;
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.prototype.getCurrentLanguageLevel = function () {
-    var cutoffs = this.getLocalState().config.xpLevelCutoffs;
-    var currentCourse = this.getCurrentCourse();
-    return 25 - cutoffs.filter(c => c > currentCourse.xp).length;
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -228,13 +206,19 @@ DuolingoHelper.prototype.findReactElement = function (node) {
 DuolingoHelper.prototype.mapSkillElementsToId = function (skillArray) {
     var map = new Map();
 
-    if (skillArray) {
+    if(skillArray)
+    {
         for (var i = 0; i < skillArray.length; ++i) {
-
-            var skill = this.getSkillForElement(skillArray[i]);
-
+            var el = $(skillArray[i]).find('div._2albn');
+            if (el.length == 0) continue;
+    
+            var reactEl = this.findReactElement(el[0]);
+            if (reactEl.children.length == 0) continue;
+    
+            var skill = reactEl.children[0].props.skill;
+    
             if (!skill) continue;
-
+    
             map[skill.id] = i;
         }
     }
@@ -264,23 +248,6 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
 }
 
 // ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.prototype.getSkillForElement = function (element) {
-    if (element) {
-        var el = $(element).find('div._2albn');
-        if (el.length > 0) {
-            var reactElement = this.findReactElement(el[0]);
-
-            if (reactElement.children.length > 0) {
-                return reactElement.children[0].props.skill;
-            }
-        }
-    }
-
-    return undefined;
-}
-
-// ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------
 
@@ -306,22 +273,6 @@ DuolingoHelper.prototype.isMainPage = function () {
 
 // Listening
 
-DuolingoHelper.prototype.getChangeListenerTarget = function(){
-    return document.querySelector("body");
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
-DuolingoHelper.prototype.createChangeListenerConfig = function(){
-    return {
-        attributes: true,
-        childList: true,
-        characterData: true
-    };
-}
-
-// ---------------------------------------------------------------------------------------------------------
-
 DuolingoHelper.prototype.startListenForContentUpdate = function () {
     this.observer = new MutationObserver(function (mutations) {
         if (this.onPageUpdate) {
@@ -329,7 +280,25 @@ DuolingoHelper.prototype.startListenForContentUpdate = function () {
         }
     }.bind(this));
 
-    this.observer.observe(this.getChangeListenerTarget(), this.createChangeListenerConfig());
+    var target = document.querySelector("body");
+
+    var config = {
+        attributes: true,
+        childList: true,
+        characterData: true
+    }
+
+    this.observer.observe(target, config);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.startListenForStorageUpdates = function () {
+    window.addEventListener('storage', function(event){
+        if(this.onDuoStateUpdate && event.storageArea == 'duo.storage'){
+            this.onDuoStateUpdate();
+        }
+    });
 }
 
 // ---------------------------------------------------------------------------------------------------------

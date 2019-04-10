@@ -1,17 +1,16 @@
 // ==UserScript==
-// @name         Tips and Notes Indicator
+// @name         Beta Tips and Notes Indicator
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.3.4
+// @version      1.4.4
 // @description  A Duolingo userscripts that adds an indicator to skills with tips and notes
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
-// @grant        GM_addStyle
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/NotesIndicator.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/NotesIndicator.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/NotesIndicator.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/NotesIndicator.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
@@ -99,7 +98,11 @@ var hintCss = `
 `;
 
 var helper = new DuolingoHelper({
-    onPageUpdate: addHintsIndicator
+    onSkillAdded: function (skill, skillHtml) {
+        if (skill.tipsAndNotes) {
+            addHintButton(skillHtml);
+        }
+    }
 });
 
 var container;
@@ -177,7 +180,7 @@ function addHintsIndicator() {
 }
 
 $(function () {
-    GM_addStyle(hintCss);
+    helper.addStyle(hintCss);
     addHintsIndicator();
 });
 

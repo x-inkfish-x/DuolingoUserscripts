@@ -1,19 +1,27 @@
 // ==UserScript==
-// @name         Language Level Viewer
+// @name         Beta Language Level Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.2
+// @version      1.1.2
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
-// @grant        GM_addStyle
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/LanguageLevelViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/LanguageLevelViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/LanguageLevelViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/LanguageLevelViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
+
+// ---------------------------------------------------------------------------------------------------------
+
+DuolingoHelper.prototype.createChangeListenerConfig = function(){
+    return {
+        childList: true,
+        subtree: true
+    }
+}
 
 // ---------------------------------------------------------------------------------------------------------
 
@@ -40,7 +48,17 @@ var css = `
 `;
 
 var helper = new DuolingoHelper({
-    onPageUpdate: setLanguageLevel
+    onPageUpdate: function (mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+            var mutation = mutations[i];
+
+            if (mutation.target.classList.contains('LFfrA') &&
+                mutation.target.classList.contains('_3MLiB')) {
+                setLanguageLevel();
+                return;
+            }
+        }
+    }
 });
 
 var levelTextField;
@@ -49,15 +67,31 @@ var levelTextField;
 
 function getLanguageLevel() {
     var cutoffs = helper.getLocalState().config.xpLevelCutoffs;
-    var currentCourse = helper.getCurrentCourse();
-    return 25 - cutoffs.filter(c => c > currentCourse.xp).length;
+    var xp = helper.getCurrentCourse().xp;
+    var remainingCutoffs = cutoffs.filter(c => c > xp).length;
+
+    if (remainingCutoffs == 0) {
+        var levels = cutoffs.length;
+        var maxCutoff = cutoffs[levels - 1];
+        
+        while (true) {
+            xp = xp - maxCutoff;
+            if (xp < 0) {
+                return levels;
+            }
+
+            levels = levels + 1;
+        }
+    }
+
+    return 25 - remainingCutoffs;
 }
 
 // ---------------------------------------------------------------------------------------------------------
 
 function setLanguageLevel() {
     if ($('div.language-level').length == 0) {
-        GM_addStyle(css);
+        helper.addStyle(css);
         var levelParentField = $('div.aFqnr._1E3L7')
 
         levelTextField = $('<div class="level">{level}</div>');
@@ -67,7 +101,7 @@ function setLanguageLevel() {
         var levelBox = $('<div class="aFqnr _1E3L7 language-level"></div>')
             .append(levelTitle)
             .append(levelCircle);
-        $(levelParentField).before(levelBox);
+        $(levelParentField).first().before(levelBox);
     }
 
     levelTextField.text(getLanguageLevel);

@@ -1,17 +1,16 @@
 // ==UserScript==
-// @name         Skill Vocabulary Viewer
+// @name         Beta Skill Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.3.5
+// @version      1.4.5
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
-// @grant        GM_addStyle
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper2.0.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
@@ -92,6 +91,11 @@ var css = `
     background-color: #cccccc;
 }
 
+.skill-vocab .dictionary .pos{
+    min-width: 4.5em;
+    font-style: italic;
+}
+
 .skill-vocab .dictionary .word{
     padding-left: 1.5em;
     min-width: 13em;
@@ -152,9 +156,37 @@ var container;
 
 // ---------------------------------------------------------------------------------------------------------
 
-function addDefinition(element, def) {
-    var defLine = $('<tr><td class="word"><a href="{path}" target="_blank">{word}</a></td><td class="translations">{translation}</td></tr>'.format({
+function makePartOfSpeech(vocab) {
+    if (vocab.pos) {
+        var pos = vocab.pos.toLowerCase();
+        var gender = '';
+        if (vocab.gender) {
+            gender = vocab.gender.toLowerCase()[0];
+        }
+        if (pos == 'adjective' || pos == 'adverb') {
+            pos = vocab.pos.toLowerCase().substring(0, 3);
+        } else if (pos == 'noun') {
+            pos = pos[0];
+        } else if (pos == 'pronoun') {
+            pos = 'pn';
+        } else if (pos == 'interjection') {
+            pos = 'intrj';
+        } else {
+            pos = pos[0];
+        }
+
+        return pos + gender + '.';
+    }
+
+    return '';
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function addDefinition(element, def, vocab) {
+    var defLine = $('<tr><td class="word"><a href="{path}" target="_blank">{word}</a></td><td class="translations">{translation}</td><td class="pos">{pos}</td></tr>'.format({
         word: def.word,
+        pos: makePartOfSpeech(vocab),
         translation: def.translations,
         path: def.canonical_path
     })).hide();
@@ -192,7 +224,7 @@ function populateSingleWord(text, vocab, i) {
         lexemeId: v.lexeme_id,
         success: function (obj) {
             if (obj) {
-                addDefinition(text, obj);
+                addDefinition(text, obj, v);
             }
 
             doNextVocab(text, vocab, i);
@@ -240,10 +272,15 @@ function addVocabButton(skillElement, vocab) {
                 }
             });
 
-
         $(skill).append(button);
         $(skillElement).append(skill);
     }
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
+function removeVocabularyButton(skillElement) {
+    $(skillElement).find('div.skill-vocab').remove();
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -286,9 +323,10 @@ function addVocabButtons() {
                             if (skillField) {
                                 var filteredVocab = vocab.vocab_overview.filter(v => skill.urlName == encodeURIComponent(v.skill_url_title));
 
-                                if (filteredVocab.length > 0) {
-                                    addVocabButton(skillField, filteredVocab);
-                                }
+                            if (filteredVocab.length > 0) {
+                                addVocabButton(skillField, filteredVocab);
+                            } else {
+                                removeVocabularyButton(skillField);
                             }
                         }
                     });
@@ -301,7 +339,7 @@ function addVocabButtons() {
 // ---------------------------------------------------------------------------------------------------------
 
 $(function () {
-    GM_addStyle(css);
+    helper.addStyle(css);
     addVocabButtons();
 });
 
