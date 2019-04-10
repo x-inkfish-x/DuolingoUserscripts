@@ -5,10 +5,12 @@ Just a few userscripts I made to test the capabilities of the DuolingoHelper tha
 ![All together!](https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/Screenshots/AllScripts.png)
 
 ### [Language Level Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Language-Level-Viewer)
+### [Level XP Progress Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Level-Progress)
 ### [Notes Indicator](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Notes-Indicator)
 ### [Skill Hider](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Skill-Hider)
 ### [Skill Vocabulary Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Skill-Vocabulary-Viewer)
 ### [Strength Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Strength-Viewer)
+### [Vocabulary Viewer](https://github.com/x-inkfish-x/DuolingoUserscripts/wiki/Userscript:-Vocabulary-Viewer)
 
 ***
 
