@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         Beta Language Level Viewer
+// @name         Language Level Viewer
 // @namespace    https://github.com/x-inkfish-x/
 // @version      1.1.2
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/LanguageLevelViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/LanguageLevelViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/LanguageLevelViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/LanguageLevelViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 

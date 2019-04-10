@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         Beta Skill Vocabulary Viewer
+// @name         Skill Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
 // @version      1.4.5
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
 
-// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
-// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/SkillVocabularyViewer.user.js
+// @downloadURL  https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
+// @updateURL    https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/SkillVocabularyViewer.user.js
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/master/DuolingoHelper/DuolingoHelper2.2.js
 
 // ==/UserScript==
 
@@ -323,10 +323,11 @@ function addVocabButtons() {
                             if (skillField) {
                                 var filteredVocab = vocab.vocab_overview.filter(v => skill.urlName == encodeURIComponent(v.skill_url_title));
 
-                            if (filteredVocab.length > 0) {
-                                addVocabButton(skillField, filteredVocab);
-                            } else {
-                                removeVocabularyButton(skillField);
+                                if (filteredVocab.length > 0) {
+                                    addVocabButton(skillField, filteredVocab);
+                                } else {
+                                    removeVocabularyButton(skillField);
+                                }
                             }
                         }
                     });
