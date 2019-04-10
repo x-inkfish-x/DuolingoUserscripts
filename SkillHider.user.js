@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Hider
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.4.2
+// @version      1.4.3
 // @description  A Duolinge userscript that hides skills exceeding a strength threshold
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -60,14 +60,14 @@ function addSkillButton() {
     if (helper.isMainPage()) {
         filteredSkills = helper.getLocalCurrentSkills();
         if ($('div#' + hiderId).length == 0) {
-            trimButton = $('<div class="_3LN9C _3e75V _3f25b _3hso2 _3skMI oNqWF _3hso2 _3skMI" id="{id}" style="margin-left: 0.5em;"><span>Trim</span></div>'
+            trimButton = $('<div class="_1YIzB oNqWF _3hso2 _3skMI _1AM95" id="{id}" style="margin-left: 0.5em; top: 4em;"><span>Trim</span></div>'
                 .format({
                     id: hiderId
                 }));
 
             trimButton.hide();
             trimButton.click(trim);
-            $('div.mAsUf').prepend(trimButton);
+            $('div.w8Lxd').append(trimButton);
             trimButton.fadeIn(750);
         }
     }
