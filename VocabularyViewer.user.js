@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.4
-// @description  A Duolinge userscript that adds a skill strength indicator
+// @version      1.0.5
+// @description  A Duolinge userscript that adds a sidebar with the currently know vocabulary in the current language
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
 
