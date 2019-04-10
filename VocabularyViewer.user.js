@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beta Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.3
+// @version      1.0.4
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
@@ -58,6 +58,30 @@ var css = `
 
 .vocabulary-viewer tr:nth-child(odd){
     background-color: #cccccc;
+}
+
+.vocabulary-viewer ::-webkit-scrollbar{
+    width: 15px;
+}
+
+.vocabulary-viewer ::-webkit-scrollbar-track
+{
+    box-shadow: inset 0 0 5px grey;
+    background: #f1f1f1;
+    border-radius: 15px;
+}
+
+.vocabulary-viewer ::-webkit-scrollbar-thumb
+{
+    box-shadow: inset 0 0 10px #666;
+    background: #aaa;
+    border-radius: 15px;
+}
+
+.vocabulary-viewer ::-webkit-scrollbar-thumb:hover
+{
+    box-shadow: inset 0 0 10px #333;
+    background: #888;
 }
 `;
 
