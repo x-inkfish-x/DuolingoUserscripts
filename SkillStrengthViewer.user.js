@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beta Strength Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      2.5.2
+// @version      3.0.0
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -11,6 +11,7 @@
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper2.2.js
+// @require      https://github.com/x-inkfish-x/DuolingoUserscripts/raw/Beta/DuolingoHelper/DuolingoHelper3.0.include.js
 
 // ==/UserScript==
 
