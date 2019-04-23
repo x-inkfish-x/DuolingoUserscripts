@@ -1,7 +1,7 @@
 // Insert global duolingo helper into page
 
 const DuolingoHelperId = 'GlobarDuolingoHelperId';
-if (document.getElementById(DuolingoHelperId) != undefined) {
+if (document.getElementById(DuolingoHelperId) == undefined) {
     var script = document.createElement('script');
     
     script.type = 'text/javascript';
