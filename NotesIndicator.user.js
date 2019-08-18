@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tips and Notes Indicator
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.4.4
+// @version      1.4.5
 // @description  A Duolingo userscripts that adds an indicator to skills with tips and notes
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -65,7 +65,7 @@ var hintCss = `
     border-color: #555;
     border-radius: 1em;
 
-    z-index: 100;
+    z-index: 1000000;
 
     background-color: #dddddd;
 }

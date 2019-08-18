@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Skill Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.4.5
+// @version      1.4.6
 // @description  A Duolingo userscript to see the vocabulary associated with a skill
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
@@ -45,7 +45,7 @@ var css = `
     border-color: #555;
     border-radius: 1em;
 
-    z-index: 100;
+    z-index: 1000000;
 
     background-color: #d8d8d8;
 }
