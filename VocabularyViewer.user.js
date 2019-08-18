@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Beta Vocabulary Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      1.0.4
+// @version      1.0.5
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/
@@ -147,8 +147,8 @@ function addVocabulary(vocab) {
                 title = $('<h2></h2>');
                 var tableContainer = $('<div class="container"></div>').append(vocabTable);
                 var vocabContainer = $('<div class="_2SCNP _1E3L7 vocabulary-viewer"></div>').append(title).append(tableContainer);
-
-                $("div._2_lzu div._21w25").after(vocabContainer);
+                
+                $("div._2_lzu div._2SCNP._1E3L7").after(vocabContainer);
             }
 
             $(title).text('Loading...');
