@@ -33,8 +33,10 @@ var css = `
     left: 50%;
     transform: translate(-50%, -45%);
 
-    width: 20em;
+    width: 90%;
+    min-width: 5em;
     height: 85%;
+    min-height:5em;
 
     padding-top: 1.1em;
     padding-bottom: 1em;
@@ -46,6 +48,15 @@ var css = `
     z-index: 100;
 
     background-color: #d8d8d8;
+}
+
+.skill-vocab .container .health{
+    position: absolute;
+    top: 1em;
+    right: 1.5em;
+    font-size: 0.45em;
+    color: #534;
+    cursor: default;
 }
 
 .skill-vocab .container .text{
@@ -238,9 +249,26 @@ function populateSingleWord(text, vocab, i) {
 
 // ---------------------------------------------------------------------------------------------------------
 
+function getVocabHealth(vocab) {
+    var combinedHealth = 0;
+
+    vocab.forEach(function (v) {
+        combinedHealth += v.strength;
+    });
+
+    return Math.round((combinedHealth / vocab.length) * 100);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+
 function populateContainer(element, vocab) {
     if (vocab.length > 0) {
         $(container).find('.loader').show();
+        health = $(container).find('.health');
+        health.text('❤️ {health}/100'.format({
+            health: getVocabHealth(vocab)
+        }));
+
         var text = $(container).find('.text');
 
         $(text).empty();
@@ -303,15 +331,17 @@ function addVocabButtons() {
                                 }
                             });
 
-
+                        var vocabHealth = $('<div class="health">Test health</div>');
                         var text = $('<div class="text"></div>');
 
                         container = $('<div class="container"></div>')
                             .hide()
+                            .append(vocabHealth)
                             .append(text)
                             .append(exit)
 
-                        var vocabField = $('<div class="skill-vocab"></div>').append(container);
+                        var vocabField = $('<div class="skill-vocab"></div>')
+                            .append(container)
 
                         $(vocabFieldTarget).append(vocabField);
                     }

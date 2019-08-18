@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Strength Viewer
 // @namespace    https://github.com/x-inkfish-x/
-// @version      2.5.2
+// @version      3.0.0
 // @description  A Duolinge userscript that adds a skill strength indicator
 // @author       Legato né Mikael
 // @match        https://www.duolingo.com/*
