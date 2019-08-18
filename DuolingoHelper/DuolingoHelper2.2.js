@@ -186,9 +186,14 @@ DuolingoHelper.prototype.findReactElement = function (node) {
         if (key.startsWith("__reactInternalInstance$")) {
             var prop = node[key];
 
-            if (!prop._currentElement) continue;
-
-            return prop._currentElement.props;
+            if (prop._currentElement && prop._currentElement.props)
+            {
+                return prop._currentElement.props;
+            }
+            else if(prop.memoizedProps)
+            {
+                return prop.memoizedProps;
+            }
         }
     }
     return null;
@@ -242,8 +247,17 @@ DuolingoHelper.prototype.getSkillForElement = function (element) {
         if (el.length > 0) {
             var reactElement = this.findReactElement(el[0]);
 
-            if (reactElement.children.length > 0) {
-                return reactElement.children[0].props.skill;
+            if(reactElement)
+            {
+                for(var i = 0; i < reactElement.children.length; ++i)
+                {
+                    var e = reactElement.children[i];
+
+                    if(e && e.props && e.props.skill)
+                    {
+                        return e.props.skill;
+                    }
+                }
             }
         }
     }
