@@ -300,7 +300,7 @@ DuolingoHelper.prototype.getSkillFields = function () {
 // Page state helpers
 
 DuolingoHelper.prototype.isMainPage = function () {
-    return window.location.pathname.replace("/", "").length == 0;
+    return window.location.pathname.replace("/learn", "").length == 0;
 }
 
 // ---------------------------------------------------------------------------------------------------------
