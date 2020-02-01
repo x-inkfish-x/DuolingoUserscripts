@@ -248,9 +248,14 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
                 args.func(skill, skillElements[skillElementMap[skill.id]]);
             });
         });
-    } else {
+    } else if (args.skill) {
         args.skills.forEach(function (skill) {
             args.func(skill, skillElements[skillElementMap[skill.id]]);
+        });
+    } else {
+        var elementsAsArray = Array.from(skillElements);
+        elementsAsArray.forEach((skillElement) => {
+            args.func(this.getSkillForElement(skillElement), skillElement);
         });
     }
 }
