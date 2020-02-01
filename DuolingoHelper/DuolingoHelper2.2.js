@@ -186,12 +186,9 @@ DuolingoHelper.prototype.findReactElement = function (node) {
         if (key.startsWith("__reactInternalInstance$")) {
             var prop = node[key];
 
-            if (prop._currentElement && prop._currentElement.props)
-            {
+            if (prop._currentElement && prop._currentElement.props) {
                 return prop._currentElement.props;
-            }
-            else if(prop.memoizedProps)
-            {
+            } else if (prop.memoizedProps) {
                 return prop.memoizedProps;
             }
         }
@@ -232,9 +229,14 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
                 args.func(skill, skillElements[skillElementMap[skill.id]]);
             });
         });
-    } else {
+    } else if (args.skills) {
         args.skills.forEach(function (skill) {
             args.func(skill, skillElements[skillElementMap[skill.id]]);
+        });
+    } else {
+        var elementsAsArray = Array.from(skillElements)
+        elementsAsArray.forEach((skillElement) => {
+            args.func(this.getSkillForElement(skillElement), skillElement);
         });
     }
 }
@@ -247,14 +249,11 @@ DuolingoHelper.prototype.getSkillForElement = function (element) {
         if (el.length > 0) {
             var reactElement = this.findReactElement(el[0]);
 
-            if(reactElement)
-            {
-                for(var i = 0; i < reactElement.children.length; ++i)
-                {
+            if (reactElement) {
+                for (var i = 0; i < reactElement.children.length; ++i) {
                     var e = reactElement.children[i];
 
-                    if(e && e.props && e.props.skill)
-                    {
+                    if (e && e.props && e.props.skill) {
                         return e.props.skill;
                     }
                 }
@@ -282,7 +281,7 @@ DuolingoHelper.prototype.getSkillFields = function () {
 // Page state helpers
 
 DuolingoHelper.prototype.isMainPage = function () {
-    return window.location.pathname.replace("/", "").length == 0;
+    return window.location.pathname.replace("/learn", "").length == 0;
 }
 
 // ---------------------------------------------------------------------------------------------------------
