@@ -18,7 +18,7 @@ class DuolingoHelper {
 
 // ---------------------------------------------------------------------------------------------------------
 
-DuolingoHelper.prototype.skillElementClass = 'Af4up';
+DuolingoHelper.prototype.skillElementClass = "_2iiJH";
 DuolingoHelper.prototype.languageDropdownEntryClass = "U_ned";
 
 // ---------------------------------------------------------------------------------------------------------
@@ -264,18 +264,12 @@ DuolingoHelper.prototype.forEachSkill = function (args) {
 
 DuolingoHelper.prototype.getSkillForElement = function (element) {
     if (element) {
-        var el = $(element).find('div._2albn');
+        var el = $(element).find('div._2MxuB');
         if (el.length > 0) {
             var reactElement = this.findReactElement(el[0]);
 
-            if (reactElement) {
-                for (var i = 0; i < reactElement.children.length; ++i) {
-                    var e = reactElement.children[i];
-
-                    if (e && e.props && e.props.skill) {
-                        return e.props.skill;
-                    }
-                }
+            if (reactElement && reactElement.children && reactElement.children.props) {
+                return reactElement.children.props.skill;
             }
         }
     }
